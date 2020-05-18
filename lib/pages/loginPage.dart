@@ -158,13 +158,12 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     ButtonTheme(
-                      buttonColor: Color.fromARGB(255, 173, 216, 230),
-
+                      buttonColor: Colors.grey,
                       minWidth: 320.0,
                       height: 50.0,//Tamanho botão
                       child: RaisedButton(
                       child: new Text('Iniciar sessão',style: TextStyle(fontSize: 22),),
-
+                      color: Colors.grey,
 
                       onPressed: (){
                         _login();
