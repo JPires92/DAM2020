@@ -1,6 +1,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'package:damapp/models/conexao.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -21,8 +22,11 @@ class _LoginPageState extends State<LoginPage> {
   String msg='';
 
   Future<List> _login() async {
-    final response = await http.post("http://192.168.1.2/dam/login.php", body: {
-      "Email": user.text,
+    conexao cn= new conexao();
+    String url= cn.url+"login.php";
+    //final response = await http.post("http://10.23.93.191/dam/login.php", body: {
+    final response = await http.post(url, body: {
+    "Email": user.text,
       "Password": pass.text,
     });
 
@@ -35,7 +39,6 @@ class _LoginPageState extends State<LoginPage> {
       });
     }else{
       if(datauser[0]['Id_TipoUtilizador']=='1'){ //Admin
-
         Navigator.pushReplacementNamed(context, '/adminPage');
       }else if(datauser[0]['Id_TipoUtilizador']=='2'){//utilizador normal
         Navigator.pushReplacementNamed(context, '/initialPage');
@@ -164,7 +167,6 @@ class _LoginPageState extends State<LoginPage> {
                       child: RaisedButton(
                       child: new Text('Iniciar sessão',style: TextStyle(fontSize: 22),),
                       color: Colors.grey,
-
                       onPressed: (){
                         _login();
                         Navigator.pop(context);
