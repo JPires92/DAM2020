@@ -34,6 +34,7 @@ class _newUserState extends State<newUser> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text("Novo Utilizador"),
+        backgroundColor: Color.fromARGB(255, 173, 216, 230),
       ),
       body: Form(
         key: _formKey,
@@ -97,7 +98,7 @@ class _newUserState extends State<newUser> {
                     padding: const EdgeInsets.all(30.0),
                   ),
                   ButtonTheme( //botão
-                    buttonColor: Colors.grey,
+                    buttonColor: Color.fromARGB(255, 173, 216, 230),
                     minWidth: 200.0,
                     height: 50.0, //Tamanho botão
                     child: RaisedButton(

@@ -73,7 +73,7 @@ class MyHomePage extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               ButtonTheme(
-                buttonColor: Colors.grey,
+                buttonColor: Color.fromARGB(255, 173, 216, 230),
                 minWidth: 200.0,
                 height: 40.0, //Tamanho botão
                 child: RaisedButton(
