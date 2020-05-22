@@ -1,12 +1,14 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'package:damapp/models/conexao.dart';
+import 'package:damapp/pages/initialPage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 
 
-String username='';
+String _cidade, _email="";
 
 class LoginPage extends StatefulWidget {
   @override
@@ -21,7 +23,10 @@ class _LoginPageState extends State<LoginPage> {
   String msg='';
 
   Future<List> _login() async {
-    final response = await http.post("http://192.168.1.2/dam/login.php", body: {
+    conexao cn=new conexao();
+    var url= cn.url+"login.php";
+    //final response = await http.post("http://192.168.1.2/dam/login.php", body: {
+    final response = await http.post(url, body: {
       "Email": user.text,
       "Password": pass.text,
     });
@@ -35,15 +40,15 @@ class _LoginPageState extends State<LoginPage> {
       });
     }else{
       if(datauser[0]['Id_TipoUtilizador']=='1'){ //Admin
-
         Navigator.pushReplacementNamed(context, '/adminPage');
       }else if(datauser[0]['Id_TipoUtilizador']=='2'){//utilizador normal
-        Navigator.pushReplacementNamed(context, '/initialPage');
+
+        Navigator.of(context).push(MaterialPageRoute(builder:(context)=>Initial(email: _email,cidade: _cidade)));
+        //Navigator.pushReplacementNamed(context, '/initialPage');
       }
       setState(() {
-        username= datauser[0]['Email'];
+        _email= datauser[0]['Email'];
       });
-
     }
     return datauser;
   }
@@ -62,6 +67,7 @@ class _LoginPageState extends State<LoginPage> {
           //),
           child: Column( //Iamgem
             children: <Widget>[
+
               new Container(
                 padding: EdgeInsets.only(top:77.0),
                 child: new CircleAvatar(
@@ -158,12 +164,12 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     ButtonTheme(
-                      buttonColor: Colors.grey,
+                      buttonColor: Color.fromARGB(255, 173, 216, 230),
+
                       minWidth: 320.0,
                       height: 50.0,//Tamanho botão
                       child: RaisedButton(
                       child: new Text('Iniciar sessão',style: TextStyle(fontSize: 22),),
-                      color: Colors.grey,
 
                       onPressed: (){
                         _login();

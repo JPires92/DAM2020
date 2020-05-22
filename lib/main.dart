@@ -1,3 +1,4 @@
+import 'package:damapp/pages/Emprego/listEmprego.dart';
 import 'package:damapp/pages/initialPage.dart';
 import 'package:damapp/pages/initialPage1.dart';
 import 'package:damapp/pages/loginPage.dart';
@@ -8,8 +9,6 @@ import 'package:flutter/material.dart';
 
 
 void main() => runApp(new MyApp());
-
-String email="";
 
 class MyApp extends StatelessWidget {
 
@@ -30,6 +29,7 @@ class MyApp extends StatelessWidget {
         '/adminPage': (BuildContext context)=> new Admin(),
         '/initialPage': (BuildContext context)=> new Initial(),
         '/initialPage1': (BuildContext context)=> new InitialP1(),
+        '/listEmprego':(BuildContext context) => new listEmprego(),
       },
     );
   }
@@ -79,7 +79,7 @@ class MyHomePage extends StatelessWidget {
                 child: RaisedButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/loginPage');
-                    //Navigator.pushNamed(context, '/initialPage1');
+                    //Navigator.pushNamed(context, '/form');
                   },
                   child: const Text(
                       'Login',

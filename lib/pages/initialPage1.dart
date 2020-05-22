@@ -1,21 +1,27 @@
-import 'package:damapp/pages/initialPage.dart';
+import 'package:damapp/pages/Emprego/listEmprego.dart';
+import 'package:damapp/pages/Emprego/myEmprego.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-
+String _cidade,_email="";
 class InitialP1 extends StatefulWidget {
-  InitialP1({this.username,this.cidade}); //email user
-  final String username,cidade;
+  final String cidade,email;
+  //Construtor
+  InitialP1({Key key,@required this.email, @required this.cidade}): super(key: key);
 
   @override
-  _InitialP1State createState() => _InitialP1State();
+  _InitialP1State createState(){
+    _cidade=this.cidade;
+    _email=this.email;
+    return _InitialP1State();
+  }
 }
 
 class _InitialP1State extends State<InitialP1> {
 
   int _selectedIndex = 2;
 
-  //Verifica item selecionado na barra 1 para navegação
+  //Verifica item selecionado na barra inferior para navegação
   void _onItemTapped(int index) {
     setState(() {
      //_selectedIndex = index;
@@ -24,6 +30,9 @@ class _InitialP1State extends State<InitialP1> {
 
       if(index==2)
         Navigator.pushReplacementNamed(context, '/initialPage');
+
+      if (index==3)
+        Navigator.of(context).push(MaterialPageRoute(builder:(context)=>myEmprego(email: _email,cidade: _cidade)));
 
     });
   }
@@ -54,7 +63,9 @@ class _InitialP1State extends State<InitialP1> {
                   //icones
                   children: <Widget>[
                     IconButton(
-                      onPressed: (){},
+                      onPressed: (){
+                        Navigator.pushNamed(context, '/listEmprego');
+                      },
                       icon: Icon(Icons.landscape, size: 35,),
                     ),
                   ],
@@ -63,7 +74,9 @@ class _InitialP1State extends State<InitialP1> {
                   //icones
                   children: <Widget>[
                     IconButton(
-                      onPressed: (){},
+                      onPressed: (){
+                        Navigator.pushNamed(context, '/listEmprego');
+                      },
                       icon: Icon(Icons.home,size: 35,),
                     )
                   ],
@@ -72,12 +85,14 @@ class _InitialP1State extends State<InitialP1> {
                   //icones
                   children: <Widget>[
                     IconButton(
-                      onPressed: (){},
+                      onPressed: (){
+                        Navigator.pushNamed(context, '/listEmprego');
+                      },
                       icon: Icon(Icons.info, size: 35, ),
                     ),
                     Center(
                       child: Text(
-                        cidade,
+                        _cidade,
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -87,7 +102,9 @@ class _InitialP1State extends State<InitialP1> {
                   //icones
                   children: <Widget>[
                     IconButton(
-                      onPressed: (){},
+                      onPressed: (){
+                        Navigator.of(context).push(MaterialPageRoute(builder:(context)=>listEmprego(email: _email,cidade: _cidade)));
+                      },
                       icon: Icon(Icons.account_balance_wallet, size: 35,),
                     )
                   ],
@@ -96,7 +113,9 @@ class _InitialP1State extends State<InitialP1> {
                   //icones
                   children: <Widget>[
                     IconButton(
-                      onPressed: (){},
+                      onPressed: (){
+                        Navigator.pushNamed(context, '/listEmprego');
+                      },
                       icon: Icon(Icons.local_activity,size: 35,),
                     )
                   ],
