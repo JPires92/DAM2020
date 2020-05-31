@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:damapp/models/conexao.dart';
 import 'package:damapp/pages/Emprego/novoEmprego.dart';
+import 'package:damapp/pages/Emprego/detailEmprego.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -26,7 +27,7 @@ class myEmprego extends StatefulWidget {
 class _myEmpregoState extends State<myEmprego> {
 
   //Carregar anuncios de emprego pessoais
-  Future<List> _fetchConcelhos() async {
+  Future<List> _fetchEmprego() async {
     conexao cn =new conexao();
     final String url= cn.url+"getMyEmpregos.php";
 
@@ -56,7 +57,7 @@ class _myEmpregoState extends State<myEmprego> {
           Navigator.of(context).push(MaterialPageRoute(builder:(context)=>novoEmprego(email: _email,cidade: _cidade)));
         }),
         body:new FutureBuilder<List>(
-          future: _fetchConcelhos(),
+          future: _fetchEmprego(),
           builder: (context, snapshot) {
             if (snapshot.hasError) print(snapshot.error);
             return snapshot.hasData
@@ -83,12 +84,15 @@ class ItemList extends StatelessWidget {
         return new Container(
           padding: const EdgeInsets.all(10.0),
           child: new GestureDetector(
-            //onTap: () => Navigator.of(context).push(
-              //new MaterialPageRoute(
-                //  builder: (BuildContext context) => new Detail(
-                  //  list: list,
-                    //index: i,
-                  //)),
+            onTap: () => Navigator.of(context).push(
+              new MaterialPageRoute(
+                  builder: (BuildContext context) => new detailEmprego(
+                    list: list,
+                    index: i,
+                    email: _email,
+                    cidade: _cidade,
+                  )),
+            ),
             child: new Card(
               child: new ListTile(
                 title: new Text(
@@ -100,10 +104,6 @@ class ItemList extends StatelessWidget {
                   size: 44.0,
                   color: Colors.black,
                 ),
-              //  subtitle: new Text(
-                //  "Nivel : ${list[i]['nivel']}",
-                  //style: TextStyle(fontSize: 20.0, color: Colors.black),
-                //),
               ),
             ),
           ),

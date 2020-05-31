@@ -1,55 +1,52 @@
 import 'dart:convert';
-
+import 'package:flutter/material.dart';
+import 'package:damapp/pages/initialPage1.dart';
+import 'package:http/http.dart' as http;
 import 'package:damapp/models/atividade.dart';
 import 'package:damapp/models/conexao.dart';
-import 'package:damapp/pages/initialPage1.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
-String _cidade,_email="";
 
-class novoEmprego extends StatefulWidget {
+class editEmprego extends StatefulWidget {
+  final List list;
+  final int index;
+  final String email,cidade;
 
-  final String cidade;
-  final String email;
-  //Construtor
-  novoEmprego({Key key,@required this.email, @required this.cidade}): super(key: key);
 
+  editEmprego({this.index,this.list,this.email,this.cidade});
 
   @override
-  _novoEmpregoState createState() {
-
-    _cidade=this.cidade;
-    _email=this.email;
-
-    return _novoEmpregoState();
-  }
+  _editEmpregoState createState() => new _editEmpregoState();
 }
 
-class _novoEmpregoState extends State<novoEmprego> {
+class _editEmpregoState extends State<editEmprego> {
 
   TextEditingController controllerDesignacao = new TextEditingController();
   TextEditingController controllerDescricao = new TextEditingController();
   TextEditingController controllerEmail = new TextEditingController();
   TextEditingController controllerAtividade = new TextEditingController();
   atividade _currentAtividade;
-
   var _formKey = GlobalKey<FormState>();
 
-  //Adicionar proposta de emprego
-  void addEmprego() {
+
+  void editData() {
     conexao cn = new conexao();
-    var url = cn.url + "addEmprego.php";
-    //var url = "http://192.168.1.2/dam/addUser.php";
+    var url = cn.url + "editEmprego.php";
     http.post(url, body: {
+      "id": widget.list[widget.index]['Id_Emprego'],
       "Designacao": controllerDesignacao.text,
       "Descricao": controllerDescricao.text,
       "EContacto": controllerEmail.text,
-      "Estado":  "1", //ativo por defeito
-      "Email": _email, //email user
-      "IdAtividade": _currentAtividade.id, //informática
-      "Cidade":_cidade,
+      "idAtividade": _currentAtividade.id,
     });
+  }
+
+
+  @override
+  void initState() {
+    controllerDesignacao= new TextEditingController(text: widget.list[widget.index]['Designacao'] );
+    controllerDescricao= new TextEditingController(text: widget.list[widget.index]['Descricao'] );
+    controllerEmail= new TextEditingController(text: widget.list[widget.index]['EmailContacto'] );
+    super.initState();
   }
 
 
@@ -70,6 +67,7 @@ class _novoEmpregoState extends State<novoEmprego> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -79,15 +77,12 @@ class _novoEmpregoState extends State<novoEmprego> {
               onPressed: (){
                 Navigator.pushReplacementNamed(context, '/MyHomePage');
               },
-              icon: Icon(
-                Icons.exit_to_app,
-              )
+              icon: Icon(Icons.exit_to_app,)
           ),
         ],
         title: Text("Fixa-te"),
       ),
-      body:
-      Form(
+      body:       Form(
         key: _formKey,
         child: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -97,7 +92,7 @@ class _novoEmpregoState extends State<novoEmprego> {
                 children: <Widget>[
                   Center(
                     child: Text(
-                      "Nova oferta de emprego",
+                      "Editar oferta de emprego",
                       style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),
                     ),
                   ),
@@ -179,16 +174,15 @@ class _novoEmpregoState extends State<novoEmprego> {
                     child: RaisedButton(
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
-                          addEmprego();
-                          //Navigator.pop(context);
+                          editData();
                           Navigator.of(context).push(
                               new MaterialPageRoute(
-                                builder: (BuildContext context)=> new InitialP1(email: _email , cidade: _cidade),
+                                  builder: (BuildContext context)=>new InitialP1(email: widget.email,cidade: widget.cidade,)
                               ));
                         }
                       },
                       child: const Text(
-                          'Registar',
+                          'Alterar',
                           style: TextStyle(fontSize: 20)
                       ),
                     ),

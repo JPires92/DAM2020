@@ -30,7 +30,6 @@ class Initial extends StatefulWidget {
 }
 
 class _InitialState extends State<Initial> {
-
   concelho _currentCity;
   Future<List<concelho>> _fetchConcelhos() async {
     conexao cn =new conexao();
@@ -111,11 +110,15 @@ class _InitialState extends State<Initial> {
                 height: 30.0, //Tamanho botão
                 child: RaisedButton(
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder:(context)=>InitialP1(email: _email,cidade: _cidade)));
+                    if(_currentCity!=null) {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) =>
+                              InitialP1(email: _email, cidade: _cidade)));
+                      }
                     setState(() {
-                      _cidade= _currentCity.label;
+                      _cidade = _currentCity.label;
                     });
-                    //Navigator.pushNamed(context,'/InitialP1');
+
                   },
                   child: const Text(
                       'Continuar',

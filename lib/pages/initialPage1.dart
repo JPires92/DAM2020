@@ -1,5 +1,8 @@
 import 'package:damapp/pages/Emprego/listEmprego.dart';
 import 'package:damapp/pages/Emprego/myEmprego.dart';
+import 'package:damapp/pages/EspVerdes/listEspVerdes.dart';
+import 'package:damapp/pages/EspVerdes/myEspVerdes.dart';
+import 'package:damapp/pages/initialPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,15 +24,15 @@ class _InitialP1State extends State<InitialP1> {
 
   int _selectedIndex = 2;
 
-  //Verifica item selecionado na barra inferior para navegação
+  //VERIFICA ITEM SELECIONADO MENU INFERIOR
   void _onItemTapped(int index) {
     setState(() {
      //_selectedIndex = index;
       if(index==0)
-          Navigator.pushReplacementNamed(context, '/MyHomePage');
+        Navigator.of(context).push(MaterialPageRoute(builder:(context)=>myEspVerdes(email: _email,cidade: _cidade,)));
 
-      if(index==2)
-        Navigator.pushReplacementNamed(context, '/initialPage');
+      if(index==2) //Navigator.pushReplacementNamed(context, '/initialPage');
+        Navigator.of(context).push(MaterialPageRoute(builder:(context)=>Initial(email: _email,cidade: _cidade)));
 
       if (index==3)
         Navigator.of(context).push(MaterialPageRoute(builder:(context)=>myEmprego(email: _email,cidade: _cidade)));
@@ -55,16 +58,17 @@ class _InitialP1State extends State<InitialP1> {
         ),
         body:
         Container(
+          //MENU SUPERIOR
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center ,
             //crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
                 Column(
-                  //icones
+                  //icones barra superior
                   children: <Widget>[
                     IconButton(
                       onPressed: (){
-                        Navigator.pushNamed(context, '/listEmprego');
+                        Navigator.of(context).push(MaterialPageRoute(builder:(context)=>listEspVerdes(email: _email,cidade: _cidade)));
                       },
                       icon: Icon(Icons.landscape, size: 35,),
                     ),
@@ -129,7 +133,8 @@ class _InitialP1State extends State<InitialP1> {
             ),
           ),
         ),
-        //Barra de navegação inferior
+
+        //MENU INFERIOR
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           items: <BottomNavigationBarItem>[

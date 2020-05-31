@@ -1,32 +1,34 @@
+
 import 'dart:convert';
-import 'package:damapp/pages/Emprego/detailAllUsers.dart';
 import 'package:damapp/models/conexao.dart';
+import 'package:damapp/pages/EspVerdes/detailEspaco.dart';
+import 'package:damapp/pages/EspVerdes/novoEspVerde.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 String _email,_cidade="";
-class listEmprego extends StatefulWidget {
-  final String email;
-  final String cidade;
-  //Construtor
-  listEmprego({Key key,@required this.email, @required this.cidade}): super(key: key);
+class myEspVerdes extends StatefulWidget {
+
+  final String email,cidade;
+
+  myEspVerdes({@required this.email,@required this.cidade});
 
   @override
-  _listEmpregoState createState() {
+  _myEspVerdesState createState(){
     _email=this.email;
     _cidade=this.cidade;
-    return _listEmpregoState();
+    return _myEspVerdesState();
   }
 }
 
-class _listEmpregoState extends State<listEmprego> {
-
-  //Carregar anuncios de emprego pessoais
-  Future<List> _fetchEmprego() async {
+class _myEspVerdesState extends State<myEspVerdes> {
+  //Carregar anuncios de espaços verdes pessoais
+  Future<List> _fetchEspacos() async {
     conexao cn =new conexao();
-    final String url= cn.url+"getEmpregos.php";
+    final String url= cn.url+"getMyEspVerdes.php";
 
     final response = await http.post(url, body: {
+      "Email": _email,
       "Cidade": _cidade,
     });
 
@@ -46,8 +48,12 @@ class _listEmpregoState extends State<listEmprego> {
         ],
         title: Text("Fixa-te"),
       ),
+      floatingActionButton: FloatingActionButton(child: Icon(Icons.add),
+          onPressed: (){
+            Navigator.of(context).push(MaterialPageRoute(builder:(context)=>novoEspVerde(email: _email,cidade: _cidade)));
+          }),
       body:new FutureBuilder<List>(
-        future: _fetchEmprego(),
+        future: _fetchEspacos(),
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
           return snapshot.hasData
@@ -76,9 +82,9 @@ class ItemList extends StatelessWidget {
           child: new GestureDetector(
             onTap: () => Navigator.of(context).push(
               new MaterialPageRoute(
-                  builder: (BuildContext context) => new detailAllUsers(
-                    list: list,
+                  builder: (BuildContext context) => new detailEspaco(
                     index: i,
+                    list: list,
                     email: _email,
                     cidade: _cidade,
                   )),
@@ -87,10 +93,10 @@ class ItemList extends StatelessWidget {
               child: new ListTile(
                 title: new Text(
                   list[i]['Designacao'],
-                  style: TextStyle(fontSize: 25.0, color: Colors.orangeAccent),
+                  style: TextStyle(fontSize: 25.0, color: Colors.green),
                 ),
                 leading: new Icon(
-                  Icons.account_balance_wallet,
+                  Icons.landscape,
                   size: 44.0,
                   color: Colors.black,
                 ),
