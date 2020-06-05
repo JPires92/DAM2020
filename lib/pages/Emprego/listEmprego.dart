@@ -36,6 +36,8 @@ class _listEmpregoState extends State<listEmprego> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
+        title: new Text('Empregos existentes'),
+        backgroundColor: Color.fromARGB(255, 173, 216, 230),
         actions: <Widget>[
           IconButton(
               onPressed: (){
@@ -44,7 +46,7 @@ class _listEmpregoState extends State<listEmprego> {
               icon: Icon(Icons.exit_to_app,)
           ),
         ],
-        title: Text("Fixa-te"),
+
       ),
       body:new FutureBuilder<List>(
         future: _fetchEmprego(),
@@ -87,12 +89,12 @@ class ItemList extends StatelessWidget {
               child: new ListTile(
                 title: new Text(
                   list[i]['Designacao'],
-                  style: TextStyle(fontSize: 25.0, color: Colors.orangeAccent),
+                  style: TextStyle(fontSize: 25.0, color: Colors.black),
                 ),
                 leading: new Icon(
                   Icons.account_balance_wallet,
                   size: 44.0,
-                  color: Colors.black,
+                  color: Color.fromARGB(255, 173, 216, 230),
                 ),
               ),
             ),

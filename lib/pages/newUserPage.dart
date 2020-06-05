@@ -1,4 +1,3 @@
-import 'package:damapp/models/conexao.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -18,9 +17,7 @@ class _newUserState extends State<newUser> {
   var _formKey = GlobalKey<FormState>();
 
   void addUser() {
-    conexao cn= new conexao();
-    var url= cn.url+"addUser.php";
-    //var url = "http://192.168.1.2/dam/addUser.php";
+    var url = "http://192.168.1.2/dam/addUser.php";
 
     http.post(url, body: {
       "nome": controllerName.text,
@@ -36,6 +33,7 @@ class _newUserState extends State<newUser> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
+
         title: new Text("Novo Utilizador"),
         backgroundColor: Color.fromARGB(255, 173, 216, 230),
       ),

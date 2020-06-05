@@ -72,6 +72,8 @@ class _editEmpregoState extends State<editEmprego> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
+        title: new Text('Fixa-te'),
+        backgroundColor: Color.fromARGB(255, 173, 216, 230),
         actions: <Widget>[
           IconButton(
               onPressed: (){
@@ -80,7 +82,7 @@ class _editEmpregoState extends State<editEmprego> {
               icon: Icon(Icons.exit_to_app,)
           ),
         ],
-        title: Text("Fixa-te"),
+
       ),
       body:       Form(
         key: _formKey,
@@ -168,7 +170,7 @@ class _editEmpregoState extends State<editEmprego> {
                     padding: const EdgeInsets.all(30.0),
                   ),
                   ButtonTheme( //botão
-                    buttonColor: Colors.grey,
+                    buttonColor:Color.fromARGB(255, 173, 216, 230),
                     minWidth: 200.0,
                     height: 50.0, //Tamanho botão
                     child: RaisedButton(

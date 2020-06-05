@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Fixa-te',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
       ),
       home: new MyHomePage(),
       routes: <String,WidgetBuilder>{
@@ -39,6 +39,7 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Container(
         padding: EdgeInsets.only(
             top: 130
@@ -48,7 +49,7 @@ class MyHomePage extends StatelessWidget {
             children: <Widget>[
               Container( //Imagem
                 child: new CircleAvatar(
-                    backgroundColor: Color(0xF81F7F3),
+                    backgroundColor: Colors.white,
                     child: new Image(
                       width: 135,
                       height: 135,

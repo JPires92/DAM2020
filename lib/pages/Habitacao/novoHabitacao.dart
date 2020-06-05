@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:damapp/models/atividade.dart';
+import 'package:damapp/models/tipoOferta.dart';
 import 'package:damapp/models/conexao.dart';
 import 'package:damapp/pages/initialPage1.dart';
 import 'package:flutter/material.dart';
@@ -8,63 +8,65 @@ import 'package:http/http.dart' as http;
 
 String _cidade,_email="";
 
-class novoEmprego extends StatefulWidget {
+class novoHabitacao extends StatefulWidget {
 
   final String cidade;
   final String email;
   //Construtor
-  novoEmprego({Key key,@required this.email, @required this.cidade}): super(key: key);
+  novoHabitacao({Key key,@required this.email, @required this.cidade}): super(key: key);
 
 
   @override
-  _novoEmpregoState createState() {
+  _novoHabitacaoState createState() {
 
     _cidade=this.cidade;
     _email=this.email;
 
-    return _novoEmpregoState();
+    return _novoHabitacaoState();
   }
 }
 
-class _novoEmpregoState extends State<novoEmprego> {
+class _novoHabitacaoState extends State<novoHabitacao> {
 
   TextEditingController controllerDesignacao = new TextEditingController();
   TextEditingController controllerDescricao = new TextEditingController();
+  TextEditingController controllerPreco = new TextEditingController();
   TextEditingController controllerEmail = new TextEditingController();
-  TextEditingController controllerAtividade = new TextEditingController();
-  atividade _currentAtividade;
+  TextEditingController controllerTipoOferta = new TextEditingController();
+  tipoOferta _currentTipoOferta;/////aqui!!!!!!!!!!!!
 
   var _formKey = GlobalKey<FormState>();
 
   //Adicionar proposta de emprego
-  void addEmprego() {
+  void addHabitacao() {
     conexao cn = new conexao();
-    var url = cn.url + "addEmprego.php";
+    var url = cn.url + "addHabitacao.php";
     //var url = "http://192.168.1.2/dam/addUser.php";
     http.post(url, body: {
       "Designacao": controllerDesignacao.text,
       "Descricao": controllerDescricao.text,
+      "Preco": controllerPreco.text,
       "EContacto": controllerEmail.text,
       "Estado":  "1", //ativo por defeito
       "Email": _email, //email user
-      "IdAtividade": _currentAtividade.id, //informática
+      "IdTipoOferta": _currentTipoOferta.id, //informática
       "Cidade":_cidade,
     });
   }
 
 
-  Future<List<atividade>> _fetchAtividades() async {
-    conexao cn =new conexao();
-    final String url= cn.url+"getAtividades.php";
+  Future<List<tipoOferta>> _fetchTipoOferta() async {
+    conexao cn = new conexao();
+    final String url= cn.url+"getTipoOfertas.php";
 
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
       final items = json.decode(response.body).cast<Map<String, dynamic>>();
-      List<atividade> listOfAtividades = items.map<atividade>((json) {
-        return atividade.fromJson(json);
+      List<tipoOferta> listOfTipoOferta = items.map<tipoOferta>((json) {
+        return tipoOferta.fromJson(json);
       }).toList();
-      return listOfAtividades;
+      return listOfTipoOferta;
     } else {
       throw Exception('Erro!');
     }
@@ -99,7 +101,7 @@ class _novoEmpregoState extends State<novoEmprego> {
                 children: <Widget>[
                   Center(
                     child: Text(
-                      "Nova oferta de emprego",
+                      "Nova habitacao",
                       style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),
                     ),
                   ),
@@ -126,6 +128,17 @@ class _novoEmpregoState extends State<novoEmprego> {
                       ),
                     ),
                   ),
+                  new ListTile(//Preco
+                    title: new TextFormField(
+                      controller: controllerPreco,
+                      validator: (value) {
+                        if (value.isEmpty) return "Insira o Preço!";
+                      },
+                      decoration: new InputDecoration(
+                        hintText: "€", labelText: "Preço",
+                      ),
+                    ),
+                  ),
                   new ListTile( //Email de contacto
                     title: new TextFormField(
                       controller: controllerEmail,
@@ -139,36 +152,36 @@ class _novoEmpregoState extends State<novoEmprego> {
                   ),
                   new ListTile( //Categoria selecionada
                     title: new TextFormField(
-                      controller: controllerAtividade,
+                      controller: controllerTipoOferta,
                       enabled: false,
                       validator: (value) {
-                        if (value.isEmpty) return "Escolha a categoria";
+                        if (value.isEmpty) return "Escolha a oferta";
                       },
                       decoration: new InputDecoration(
-                          hintText: controllerAtividade.text, labelText: "Categoria"
+                          hintText: controllerTipoOferta.text, labelText: "Oferta"
                       ),
                     ),
                   ),
-                  new FutureBuilder<List<atividade>>( //Lista de categorias
-                      future: _fetchAtividades(),
+                  new FutureBuilder<List<tipoOferta>>( //Lista de categorias
+                      future: _fetchTipoOferta(),
                       builder: (BuildContext context,
-                          AsyncSnapshot<List<atividade>> snapshot) {
+                          AsyncSnapshot<List<tipoOferta>> snapshot) {
                         if (!snapshot.hasData) return CircularProgressIndicator();
-                        return DropdownButton<atividade>(
+                        return DropdownButton<tipoOferta>(
                           items: snapshot.data
-                              .map((_atividade) => DropdownMenuItem<atividade>(
-                            child: Text(_atividade.label),
-                            value: _atividade,
+                              .map((_tipoOferta) => DropdownMenuItem<tipoOferta>(
+                            child: Text(_tipoOferta.label),
+                            value: _tipoOferta,
                           ))
                               .toList(),
-                          onChanged: (atividade value) {
+                          onChanged: (tipoOferta value) {
                             setState(() {
-                              _currentAtividade=value;
-                              controllerAtividade.text=value.label;
+                              _currentTipoOferta=value;
+                              controllerTipoOferta.text=value.label;
                             });
                           },
                           isExpanded: false,
-                          hint: Text('Selecione a categoria'),
+                          hint: Text('Selecione a oferta'),
                         );
                       }),
                   new Padding(
@@ -184,7 +197,7 @@ class _novoEmpregoState extends State<novoEmprego> {
                     child: RaisedButton(
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
-                          addEmprego();
+                          addHabitacao();
                           //Navigator.pop(context);
                           Navigator.of(context).push(
                               new MaterialPageRoute(

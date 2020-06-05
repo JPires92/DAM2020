@@ -2,6 +2,10 @@ import 'package:damapp/pages/Emprego/listEmprego.dart';
 import 'package:damapp/pages/Emprego/myEmprego.dart';
 import 'package:damapp/pages/EspVerdes/listEspVerdes.dart';
 import 'package:damapp/pages/EspVerdes/myEspVerdes.dart';
+import 'package:damapp/pages/EspLazer/listEspLazer.dart';
+import 'package:damapp/pages/EspLazer/myEspLazer.dart';
+import 'package:damapp/pages/Habitacao/listHabitacao.dart';
+import 'package:damapp/pages/Habitacao/myHabitacao.dart';
 import 'package:damapp/pages/initialPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,11 +35,17 @@ class _InitialP1State extends State<InitialP1> {
       if(index==0)
         Navigator.of(context).push(MaterialPageRoute(builder:(context)=>myEspVerdes(email: _email,cidade: _cidade,)));
 
+      if (index==1)
+        Navigator.of(context).push(MaterialPageRoute(builder:(context)=>myHabitacao(email: _email,cidade: _cidade)));
+
       if(index==2) //Navigator.pushReplacementNamed(context, '/initialPage');
         Navigator.of(context).push(MaterialPageRoute(builder:(context)=>Initial(email: _email,cidade: _cidade)));
 
       if (index==3)
         Navigator.of(context).push(MaterialPageRoute(builder:(context)=>myEmprego(email: _email,cidade: _cidade)));
+
+      if(index==4)
+        Navigator.of(context).push(MaterialPageRoute(builder:(context)=>myEspLazer(email: _email,cidade: _cidade,)));
 
     });
   }
@@ -44,6 +54,10 @@ class _InitialP1State extends State<InitialP1> {
     Widget build(BuildContext context) {
       return Scaffold(
         appBar: new AppBar(
+          iconTheme: IconThemeData(
+              color: Colors.black
+          ),
+          backgroundColor: Colors.white,
           actions: <Widget>[
             IconButton(
                 onPressed: (){
@@ -54,18 +68,31 @@ class _InitialP1State extends State<InitialP1> {
                 )
             ),
           ],
-          title: Text("Fixa-te"),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Image.asset(
+                'assets/images/fixate4.png',
+                fit: BoxFit.cover,
+                height: 45.0,
+              ),
+            ],
+          ),
         ),
         body:
         Container(
           //MENU SUPERIOR
-          child: Row(
+
+          child:
+          Row(
             mainAxisAlignment: MainAxisAlignment.center ,
             //crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+
                 Column(
                   //icones barra superior
-                  children: <Widget>[
+                  children:
+                  <Widget>[
                     IconButton(
                       onPressed: (){
                         Navigator.of(context).push(MaterialPageRoute(builder:(context)=>listEspVerdes(email: _email,cidade: _cidade)));
@@ -79,7 +106,7 @@ class _InitialP1State extends State<InitialP1> {
                   children: <Widget>[
                     IconButton(
                       onPressed: (){
-                        Navigator.pushNamed(context, '/listEmprego');
+                        Navigator.of(context).push(MaterialPageRoute(builder:(context)=>listHabitacao(email: _email,cidade: _cidade)));
                       },
                       icon: Icon(Icons.home,size: 35,),
                     )
@@ -118,7 +145,7 @@ class _InitialP1State extends State<InitialP1> {
                   children: <Widget>[
                     IconButton(
                       onPressed: (){
-                        Navigator.pushNamed(context, '/listEmprego');
+                        Navigator.of(context).push(MaterialPageRoute(builder:(context)=>listEspLazer(email: _email,cidade: _cidade)));
                       },
                       icon: Icon(Icons.local_activity,size: 35,),
                     )
@@ -126,13 +153,16 @@ class _InitialP1State extends State<InitialP1> {
                 ),
             ],
           ),
+
+
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/images/mapa.png"),
+              image: AssetImage("assets/images/mapa04.png"),
               fit: BoxFit.cover,
             ),
           ),
         ),
+
 
         //MENU INFERIOR
         bottomNavigationBar: BottomNavigationBar(
@@ -147,7 +177,7 @@ class _InitialP1State extends State<InitialP1> {
               title: Text('Habitação'),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.border_all),
+              icon: Icon(Icons.favorite_border),
               title: Text('Home'),
             ),
             BottomNavigationBarItem(

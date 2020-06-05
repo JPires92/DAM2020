@@ -1,34 +1,32 @@
-
 import 'dart:convert';
+import 'package:damapp/pages/Habitacao/detailAllHabitacao.dart';
 import 'package:damapp/models/conexao.dart';
-import 'package:damapp/pages/EspVerdes/detailEspaco.dart';
-import 'package:damapp/pages/EspVerdes/novoEspVerde.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 String _email,_cidade="";
-class myEspVerdes extends StatefulWidget {
-
-  final String email,cidade;
-
-  myEspVerdes({@required this.email,@required this.cidade});
+class listHabitacao extends StatefulWidget {
+  final String email;
+  final String cidade;
+  //Construtor
+  listHabitacao({Key key,@required this.email, @required this.cidade}): super(key: key);
 
   @override
-  _myEspVerdesState createState(){
+  _listHabitacaoState createState() {
     _email=this.email;
     _cidade=this.cidade;
-    return _myEspVerdesState();
+    return _listHabitacaoState();
   }
 }
 
-class _myEspVerdesState extends State<myEspVerdes> {
-  //Carregar anuncios de espaços verdes pessoais
-  Future<List> _fetchEspacos() async {
+class _listHabitacaoState extends State<listHabitacao> {
+
+  //Carregar anuncios de emprego pessoais
+  Future<List> _fetchHabitacao() async {
     conexao cn =new conexao();
-    final String url= cn.url+"getMyEspVerdes.php";
+    final String url= cn.url+"getHabitacao.php";
 
     final response = await http.post(url, body: {
-      "Email": _email,
       "Cidade": _cidade,
     });
 
@@ -38,7 +36,7 @@ class _myEspVerdesState extends State<myEspVerdes> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
-        title: new Text('Área Pessoal'),
+        title: new Text('Habitações existentes'),
         backgroundColor: Color.fromARGB(255, 173, 216, 230),
         actions: <Widget>[
           IconButton(
@@ -50,14 +48,8 @@ class _myEspVerdesState extends State<myEspVerdes> {
         ],
 
       ),
-      floatingActionButton: FloatingActionButton(child: Icon(Icons.add),
-          backgroundColor: Color.fromARGB(255, 173, 216, 230),
-          foregroundColor: Colors.white,
-          onPressed: (){
-            Navigator.of(context).push(MaterialPageRoute(builder:(context)=>novoEspVerde(email: _email,cidade: _cidade)));
-          }),
       body:new FutureBuilder<List>(
-        future: _fetchEspacos(),
+        future: _fetchHabitacao(),
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
           return snapshot.hasData
@@ -86,9 +78,9 @@ class ItemList extends StatelessWidget {
           child: new GestureDetector(
             onTap: () => Navigator.of(context).push(
               new MaterialPageRoute(
-                  builder: (BuildContext context) => new detailEspaco(
-                    index: i,
+                  builder: (BuildContext context) => new detailAllHabitacao(
                     list: list,
+                    index: i,
                     email: _email,
                     cidade: _cidade,
                   )),
@@ -100,7 +92,7 @@ class ItemList extends StatelessWidget {
                   style: TextStyle(fontSize: 25.0, color: Colors.black),
                 ),
                 leading: new Icon(
-                  Icons.landscape,
+                  Icons.home,
                   size: 44.0,
                   color: Color.fromARGB(255, 173, 216, 230),
                 ),

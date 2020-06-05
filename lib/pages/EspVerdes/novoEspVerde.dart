@@ -61,6 +61,8 @@ class _novoEspVerdeState extends State<novoEspVerde> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
+        title: new Text('Área Pessoal'),
+        backgroundColor: Color.fromARGB(255, 173, 216, 230),
         actions: <Widget>[
           IconButton(
               onPressed: (){
@@ -71,9 +73,11 @@ class _novoEspVerdeState extends State<novoEspVerde> {
               )
           ),
         ],
-        title: Text("Fixa-te"),
+
       ),
-      floatingActionButton: FloatingActionButton(child: Icon(Icons.file_upload),
+      floatingActionButton: FloatingActionButton(child: Icon(Icons.file_upload,),
+        backgroundColor: Color.fromARGB(255, 173, 216, 230),
+        foregroundColor: Colors.white,
         onPressed: ()=>getGaleria(),
       ),
       body:
@@ -148,7 +152,8 @@ class _novoEspVerdeState extends State<novoEspVerde> {
                     ),
                   ),
                   ButtonTheme( //botão
-                    buttonColor: Colors.grey,
+                    buttonColor: Color.fromARGB(255, 173, 216, 230),
+
                     minWidth: 200.0,
                     height: 50.0, //Tamanho botão
                     child: RaisedButton(
@@ -164,7 +169,7 @@ class _novoEspVerdeState extends State<novoEspVerde> {
                       },
                       child: const Text(
                           'Registar',
-                          style: TextStyle(fontSize: 20)
+                          style: TextStyle(fontSize: 20,)
                       ),
                     ),
                   ),

@@ -48,6 +48,8 @@ class _detailAllEspVerdeState extends State<detailAllEspVerde> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar:  new AppBar(
+        title: new Text('Espaços verdes existentes'),
+        backgroundColor: Color.fromARGB(255, 173, 216, 230),
         actions: <Widget>[
           IconButton(
               onPressed: (){
@@ -56,7 +58,7 @@ class _detailAllEspVerdeState extends State<detailAllEspVerde> {
               icon: Icon(Icons.exit_to_app,)
           ),
         ],
-        title: Text("Fixa-te"),
+
       ),
       body:
       new Container(

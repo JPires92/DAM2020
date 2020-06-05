@@ -55,7 +55,7 @@ class _editEspacoState extends State<editEspaco> {
       "Estado":  "1", //ativo por defeito
       "Email": widget.email, //email user
       "Cidade": widget.cidade,
-      "TipoEspaco": "1", //1-Espaços verdes, 2-Espaços de lazer
+      "TipoEspaco": "2", //1-Espaços verdes, 2-Espaços de lazer
       "img1In":img1Inicial,
       "img2In":img2Inicial,
       "Img1":urlimages,
@@ -95,7 +95,7 @@ class _editEspacoState extends State<editEspaco> {
                 children: <Widget>[
                   Center(
                     child: Text(
-                      "Editar espaço verde",
+                      "Editar espaço de lazer",
                       style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),
                     ),
                   ),

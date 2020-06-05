@@ -4,35 +4,35 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 String categoria="";
-class detailAllUsers extends StatefulWidget {
+class detailAllHabitacao extends StatefulWidget {
   List list;
   int index;
   String email;
   String cidade;
 
-  detailAllUsers({this.index,this.list,this.email,this.cidade});
+  detailAllHabitacao({this.index,this.list,this.email,this.cidade});
 
   @override
-  _detailAllUsersState createState() => _detailAllUsersState();
+  _detailAllHabitacaoState createState() => _detailAllHabitacaoState();
 }
 
-class _detailAllUsersState extends State<detailAllUsers> {
+class _detailAllHabitacaoState extends State<detailAllHabitacao> {
 
   void getCategoria() async {
     conexao cn=new conexao();
-    var url= cn.url+"getAtividade.php";
+    var url= cn.url+"getTipoOferta.php";
     final response = await http.post(url, body: {
-      "Id": widget.list[widget.index]['Id_Atividade'].toString(),
+      "Id": widget.list[widget.index]['Id_TipoOferta'].toString(),
     });
 
     var datacategoria = json.decode(response.body);
     if(datacategoria.length==0){
       setState(() {
-        categoria="Sem categoria.";
+        categoria="Sem oferta.";
       });
     }else{
       setState(() {
-        categoria= datacategoria[0]['Atividade'];
+        categoria= datacategoria[0]['TipoOferta'];
       });
     }
   }
@@ -48,7 +48,7 @@ class _detailAllUsersState extends State<detailAllUsers> {
     //getCategoria();
     return new Scaffold(
       appBar:  new AppBar(
-        title: new Text('Empregos existentes'),
+        title: new Text('Habitações existentes'),
         backgroundColor: Color.fromARGB(255, 173, 216, 230),
         actions: <Widget>[
           IconButton(
@@ -76,8 +76,12 @@ class _detailAllUsersState extends State<detailAllUsers> {
                 new Text("Descrição", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
                 new Text("${widget.list[widget.index]['Descricao']}", style: new TextStyle(fontSize: 16.0),textAlign: TextAlign.center),
                 Divider(),
+                //Preco
+                new Text("Preço", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
+                new Text("${widget.list[widget.index]['Preço']}", style: new TextStyle(fontSize: 16.0),textAlign: TextAlign.center),
+                Divider(),
                 //Categoria
-                new Text("Categoria", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
+                new Text("Oferta", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
                 new Text(categoria, style: new TextStyle(fontSize: 16.0),),
                 Divider(),
                 //Email pra contacto

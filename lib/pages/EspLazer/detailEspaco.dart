@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:damapp/models/conexao.dart';
-import 'package:damapp/pages/EspVerdes/editEspaco.dart';
+import 'package:damapp/pages/EspLazer/editEspaco.dart';
 import 'package:damapp/pages/initialPage1.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -25,7 +25,7 @@ class _detailEspacoState extends State<detailEspaco> {
   //Apagar registo
   void deleteData(){
     conexao cn=new conexao();
-    var url= cn.url+"deleteEspVerde.php";
+    var url= cn.url+"deleteEspLazer.php";
     http.post(url, body: {
       'id': widget.list[widget.index]['Id_Espaco'],
       'Img1': urlimages,

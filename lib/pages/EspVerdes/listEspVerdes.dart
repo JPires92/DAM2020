@@ -38,6 +38,8 @@ class _listEspVerdesState extends State<listEspVerdes> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
+        title: new Text('Espaços verdes existentes'),
+        backgroundColor: Color.fromARGB(255, 173, 216, 230),
         actions: <Widget>[
           IconButton(
               onPressed: (){
@@ -46,7 +48,7 @@ class _listEspVerdesState extends State<listEspVerdes> {
               icon: Icon(Icons.exit_to_app,)
           ),
         ],
-        title: Text("Fixa-te"),
+
       ),
       body:new FutureBuilder<List>(
         future: _fetchEspacos(),
@@ -89,12 +91,12 @@ class ItemList extends StatelessWidget {
               child: new ListTile(
                 title: new Text(
                   list[i]['Designacao'],
-                  style: TextStyle(fontSize: 25.0, color: Colors.green),
+                  style: TextStyle(fontSize: 25.0, color: Colors.black),
                 ),
                 leading: new Icon(
                   Icons.landscape,
                   size: 44.0,
-                  color: Colors.black,
+                  color: Color.fromARGB(255, 173, 216, 230),
                 ),
               ),
             ),

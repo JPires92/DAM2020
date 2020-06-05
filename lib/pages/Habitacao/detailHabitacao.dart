@@ -2,51 +2,51 @@ import 'dart:convert';
 import 'package:damapp/models/conexao.dart';
 import 'package:damapp/pages/initialPage1.dart';
 import 'package:flutter/material.dart';
-import 'package:damapp/pages/Emprego/editEmprego.dart';
+import 'package:damapp/pages/Habitacao/editHabitacao.dart';
 import 'package:http/http.dart' as http;
 
 String categoria="";
-class detailEmprego extends StatefulWidget {
+class detailHabitacao extends StatefulWidget {
   List list;
   int index;
   String email;
   String cidade;
 
-  detailEmprego({this.index,this.list,this.email,this.cidade});
+  detailHabitacao({this.index,this.list,this.email,this.cidade});
 
 
   @override
-  _detailEmpregoState createState() {
-    return _detailEmpregoState();
+  _detailHabitacaoState createState() {
+    return _detailHabitacaoState();
   }
 }
 
-class _detailEmpregoState extends State<detailEmprego> {
+class _detailHabitacaoState extends State<detailHabitacao> {
 
   //Apagar registo
   void deleteData(){
     conexao cn=new conexao();
-    var url= cn.url+"deleteEmprego.php";
+    var url= cn.url+"deleteHabitacao.php";
     http.post(url, body: {
-      'id': widget.list[widget.index]['Id_Emprego']
+      'id': widget.list[widget.index]['Id_Habitacao']
     });
   }
 
   void getCategoria() async {
     conexao cn=new conexao();
-    var url= cn.url+"getAtividade.php";
+    var url= cn.url+"getTipoOferta.php";
     final response = await http.post(url, body: {
-      "Id": widget.list[widget.index]['Id_Atividade'].toString(),
+      "Id": widget.list[widget.index]['Id_TipoOferta'].toString(),
     });
 
     var datacategoria = json.decode(response.body);
     if(datacategoria.length==0){
       setState(() {
-        categoria="Sem categoria.";
+        categoria="Sem oferta.";
       });
     }else{
       setState(() {
-        categoria= datacategoria[0]['Atividade'];
+        categoria= datacategoria[0]['TipoOferta'];
       });
     }
   }
@@ -59,7 +59,7 @@ class _detailEmpregoState extends State<detailEmprego> {
 
   void confirm (){
     AlertDialog alertDialog = new AlertDialog(
-      content: new Text("Desja eliminar anuncio: '${widget.list[widget.index]['Designacao']}'"),
+      content: new Text("Deseja eliminar anuncio: '${widget.list[widget.index]['Designacao']}'"),
       actions: <Widget>[
         new RaisedButton(
           child: new Text("ELIMINAR",style: new TextStyle(color: Colors.black),),
@@ -68,7 +68,7 @@ class _detailEmpregoState extends State<detailEmprego> {
             deleteData();
             Navigator.of(context).push(
                 new MaterialPageRoute(
-                 builder: (BuildContext context)=> new InitialP1(email: widget.email , cidade: widget.cidade),
+                  builder: (BuildContext context)=> new InitialP1(email: widget.email , cidade: widget.cidade),
                 )
             );
           },
@@ -88,7 +88,7 @@ class _detailEmpregoState extends State<detailEmprego> {
     //getCategoria();
     return new Scaffold(
       appBar:  new AppBar(
-        title: new Text('Área Pessoal'),
+        title: new Text('Habitações existentes'),
         backgroundColor: Color.fromARGB(255, 173, 216, 230),
         actions: <Widget>[
           IconButton(
@@ -103,7 +103,7 @@ class _detailEmpregoState extends State<detailEmprego> {
       body:
       new Container(
         //height: 300.0,
-       // padding: const EdgeInsets.all(20.0),
+        // padding: const EdgeInsets.all(20.0),
         child: new Card(
           child: new Center(
             child: new Column(
@@ -116,8 +116,12 @@ class _detailEmpregoState extends State<detailEmprego> {
                 new Text("Descrição", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
                 new Text("${widget.list[widget.index]['Descricao']}", style: new TextStyle(fontSize: 16.0),textAlign: TextAlign.center),
                 Divider(),
-                //Categoria
-                new Text("Categoria", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
+                //Preco
+                new Text("Preço", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
+                new Text("${widget.list[widget.index]['Preço']}", style: new TextStyle(fontSize: 16.0),textAlign: TextAlign.center),
+                Divider(),
+                //Oferta
+                new Text("Oferta", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
                 new Text(categoria, style: new TextStyle(fontSize: 16.0),),
                 Divider(),
                 //Email pra contacto
@@ -128,23 +132,23 @@ class _detailEmpregoState extends State<detailEmprego> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     new RaisedButton(
-                      child: new Text("EDITAR"),
-                      color: Color.fromARGB(255, 173, 216, 230),
-                      shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(30.0)),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                            new MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                              new editEmprego(
-                                index: widget.index,
-                                list: widget.list,
-                                email: widget.email,
-                                cidade: widget.cidade,
-                              ),
-                            )
-                        );
-                      }
+                        child: new Text("EDITAR"),
+                        color: Color.fromARGB(255, 173, 216, 230),
+                        shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0)),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                              new MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                new editHabitacao(
+                                  index: widget.index,
+                                  list: widget.list,
+                                  email: widget.email,
+                                  cidade: widget.cidade,
+                                ),
+                              )
+                          );
+                        }
                     ),
                     VerticalDivider(),
                     new RaisedButton(

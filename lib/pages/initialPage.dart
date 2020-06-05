@@ -53,22 +53,41 @@ class _InitialState extends State<Initial> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
+        iconTheme: IconThemeData(
+            color: Colors.black
+        ),
+
+        backgroundColor: Colors.white,
         actions: <Widget>[
+
           IconButton(
               onPressed: (){
                 Navigator.pushReplacementNamed(context, '/MyHomePage');
               },
               icon: Icon(
                 Icons.exit_to_app,
+
+
               )
           ),
         ],
-        title: Text("Fixa-te"),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Image.asset(
+              'assets/images/fixate4.png',
+              fit: BoxFit.cover,
+              height: 45.0,
+            ),
+          ],
+        ),
+        //title: Text('Fixa-te', style: TextStyle(color: Colors.black)),
+
       ),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/mapa.png"),
+            image: AssetImage("assets/images/mapa01.png"),
             fit: BoxFit.cover,
           ),
         ),
@@ -105,7 +124,7 @@ class _InitialState extends State<Initial> {
                   _currentCity.label)
                   : Text("Nenhuma cidade selecionada!"),
               ButtonTheme(
-                buttonColor: Colors.grey,
+                buttonColor: Colors.white,
                 minWidth: 180.0,
                 height: 30.0, //Tamanho botão
                 child: RaisedButton(

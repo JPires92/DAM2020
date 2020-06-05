@@ -56,6 +56,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:  Colors.white,
       resizeToAvoidBottomPadding: false,
       body: Form(
         child: Container( //Fundo
@@ -112,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                         decoration: InputDecoration(
                             icon: Icon(
                               Icons.email,
-                              color: Colors.black,
+                              color: Color.fromARGB(255, 173, 216, 230),
                             ),
                             hintText: 'Email'
                         ),
@@ -143,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                         decoration: InputDecoration(
                             icon: Icon(
                               Icons.vpn_key,
-                              color: Colors.black,
+                              color: Color.fromARGB(255, 173, 216, 230),
                             ),
                             hintText: 'Password'
                         ),

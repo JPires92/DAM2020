@@ -1,29 +1,35 @@
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:damapp/pages/initialPage1.dart';
-import 'package:http/http.dart' as http;
 import 'package:damapp/models/conexao.dart';
+import 'package:damapp/pages/initialPage1.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
+import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class editEspaco extends StatefulWidget {
-  final List list;
-  final int index;
-  final String email,cidade,img1,img2;
 
-  editEspaco({this.index,this.list,this.email,this.cidade,this.img1,this.img2});
+String _cidade,_email="";
+class novoEspLazer extends StatefulWidget {
+  final String cidade;
+  final String email;
+  //Construtor
+  novoEspLazer({@required this.email, @required this.cidade});
 
   @override
-  _editEspacoState createState() => _editEspacoState();
+  _novoEspLazerState createState(){
+    _cidade=this.cidade;
+    _email=this.email;
+    return _novoEspLazerState();
+  }
 }
 
-class _editEspacoState extends State<editEspaco> {
 
-  String img1Inicial,img2Inicial; //Para enviar no pedido e verificar se é necessário fazer update a imagem ou nao
-  String urlimages,urlimages2;
+class _novoEspLazerState extends State<novoEspLazer> {
+
+  String urlimages="SemImagem";
+  String urlimages2="SemImagem";
   int contador=1;
 
 
@@ -31,33 +37,21 @@ class _editEspacoState extends State<editEspaco> {
   TextEditingController controllerDescricao = new TextEditingController();
   TextEditingController controllerLocalizacao = new TextEditingController();
 
-  @override
-  void initState() {
-    controllerDesignacao= new TextEditingController(text: widget.list[widget.index]['Designacao'] );
-    controllerDescricao= new TextEditingController(text: widget.list[widget.index]['Descricao'] );
-    controllerLocalizacao= new TextEditingController(text: widget.list[widget.index]['Localizacao'] );
-    urlimages=widget.img1; img1Inicial=widget.img1;
-    urlimages2=widget.img2; img2Inicial=widget.img2;
-    super.initState();
-  }
 
   var _formKey = GlobalKey<FormState>();
 
   //Adicionar proposta de emprego
-  void EditEspaco() {
+  void addEspaco() {
     conexao cn = new conexao();
-    var url = cn.url + "editEspaco.dart.php";
+    var url = cn.url + "addEspLazer.php";
     http.post(url, body: {
-      "id": widget.list[widget.index]['Id_Espaco'],
       "Designacao": controllerDesignacao.text,
       "Localizacao":controllerLocalizacao.text,
       "Descricao": controllerDescricao.text,
       "Estado":  "1", //ativo por defeito
-      "Email": widget.email, //email user
-      "Cidade": widget.cidade,
-      "TipoEspaco": "1", //1-Espaços verdes, 2-Espaços de lazer
-      "img1In":img1Inicial,
-      "img2In":img2Inicial,
+      "Email": _email, //email user
+      "Cidade":_cidade,
+      "TipoEspaco": "2", //1-Espaços verdes, 2-Espaços de lazer
       "Img1":urlimages,
       "Img2":urlimages2,
     });
@@ -67,7 +61,7 @@ class _editEspacoState extends State<editEspaco> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text('Fixa-te'),
+        title: new Text('Área Pessoal'),
         backgroundColor: Color.fromARGB(255, 173, 216, 230),
         actions: <Widget>[
           IconButton(
@@ -82,6 +76,8 @@ class _editEspacoState extends State<editEspaco> {
 
       ),
       floatingActionButton: FloatingActionButton(child: Icon(Icons.file_upload),
+        backgroundColor: Color.fromARGB(255, 173, 216, 230),
+        foregroundColor: Colors.white,
         onPressed: ()=>getGaleria(),
       ),
       body:
@@ -95,7 +91,7 @@ class _editEspacoState extends State<editEspaco> {
                 children: <Widget>[
                   Center(
                     child: Text(
-                      "Editar espaço verde",
+                      "Novo espaço de lazer",
                       style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),
                     ),
                   ),
@@ -162,16 +158,16 @@ class _editEspacoState extends State<editEspaco> {
                     child: RaisedButton(
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
-                          EditEspaco();
+                          addEspaco();
                           // Navigator.pop(context);
                           Navigator.of(context).push(
                               new MaterialPageRoute(
-                                builder: (BuildContext context)=> new InitialP1(email: widget.email , cidade: widget.cidade),
+                                builder: (BuildContext context)=> new InitialP1(email: _email , cidade: _cidade),
                               ));
                         }
                       },
                       child: const Text(
-                          'Editar',
+                          'Registar',
                           style: TextStyle(fontSize: 20)
                       ),
                     ),
@@ -204,7 +200,7 @@ class _editEspacoState extends State<editEspaco> {
     request.files.add(multipartFile);
     request.fields.addAll({'UPLOADCARE_PUB_KEY': 'demopublickey'}); //CHAVE PUBLICA
     //request.fields.addAll({'UPLOADCARE_PUB_KEY': 'bb209e6bc36b1b7bb8aa'}); //CHAVE PESSOAL
-    // bb209e6bc36b1b7bb8aa
+
     var response = await request.send();
 
     response.stream.transform(utf8.decoder).listen( (value){
@@ -222,4 +218,5 @@ class _editEspacoState extends State<editEspaco> {
       });
     });
   }
+
 }
