@@ -4,6 +4,7 @@ import 'package:damapp/pages/initialPage1.dart';
 import 'package:flutter/material.dart';
 import 'package:damapp/pages/Habitacao/editHabitacao.dart';
 import 'package:http/http.dart' as http;
+import 'package:cached_network_image/cached_network_image.dart';
 
 String categoria="";
 class detailHabitacao extends StatefulWidget {
@@ -23,13 +24,33 @@ class detailHabitacao extends StatefulWidget {
 
 class _detailHabitacaoState extends State<detailHabitacao> {
 
+  String urlimages="SemImagem";
+  String urlimages2="SemImagem";
+
   //Apagar registo
   void deleteData(){
     conexao cn=new conexao();
     var url= cn.url+"deleteHabitacao.php";
     http.post(url, body: {
-      'id': widget.list[widget.index]['Id_Habitacao']
+      'id': widget.list[widget.index]['Id_Habitacao'],
+      'Img1': urlimages,
+      'Img2': urlimages2,
     });
+  }
+
+  void getImagens() async {
+    conexao cn=new conexao();
+    var url= cn.url+"getImagensHabitacao.php";
+    final response = await http.post(url, body: {
+      "Id": widget.list[widget.index]['Id_Habitacao'].toString(),
+    });
+    var data = json.decode(response.body);
+    if(data.length!=0){
+      setState(() {
+        urlimages= data[0]['Localizacao'];
+        urlimages2= data[1]['Localizacao'];
+      });
+    }
   }
 
   void getCategoria() async {
@@ -46,7 +67,7 @@ class _detailHabitacaoState extends State<detailHabitacao> {
       });
     }else{
       setState(() {
-        categoria= datacategoria[0]['TipoOferta'];
+        categoria= datacategoria[0]['Oferta'];
       });
     }
   }
@@ -54,6 +75,7 @@ class _detailHabitacaoState extends State<detailHabitacao> {
   @override
   void initState() {
     getCategoria();
+    getImagens();
     super.initState();
   }
 
@@ -87,6 +109,8 @@ class _detailHabitacaoState extends State<detailHabitacao> {
   Widget build(BuildContext context) {
     //getCategoria();
     return new Scaffold(
+
+
       appBar:  new AppBar(
         title: new Text('Habitações existentes'),
         backgroundColor: Color.fromARGB(255, 173, 216, 230),
@@ -100,7 +124,9 @@ class _detailHabitacaoState extends State<detailHabitacao> {
         ],
 
       ),
+      resizeToAvoidBottomInset: false,
       body:
+      SingleChildScrollView(child:
       new Container(
         //height: 300.0,
         // padding: const EdgeInsets.all(20.0),
@@ -118,7 +144,7 @@ class _detailHabitacaoState extends State<detailHabitacao> {
                 Divider(),
                 //Preco
                 new Text("Preço", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
-                new Text("${widget.list[widget.index]['Preço']}", style: new TextStyle(fontSize: 16.0),textAlign: TextAlign.center),
+                new Text("${widget.list[widget.index]['Preco']}", style: new TextStyle(fontSize: 16.0),textAlign: TextAlign.center),
                 Divider(),
                 //Oferta
                 new Text("Oferta", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
@@ -126,7 +152,26 @@ class _detailHabitacaoState extends State<detailHabitacao> {
                 Divider(),
                 //Email pra contacto
                 new Text("Email Contacto", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
-                new Text("${widget.list[widget.index]['EmailContacto']}", style: new TextStyle(fontSize: 16.0),),
+                new Text("${widget.list[widget.index]['EmailContato']}", style: new TextStyle(fontSize: 16.0),),
+                Divider(),
+                Text("Imagens", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
+                urlimages=="SemImagem"?
+                Text(" "):
+                CachedNetworkImage(
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  imageUrl: 'https://ucarecdn.com/'+urlimages+'/',
+                  width: 320,
+                  height: 232,
+                ),
+                Divider(),
+                urlimages2=="SemImagem"?
+                Text(" "):
+                CachedNetworkImage(
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  imageUrl: 'https://ucarecdn.com/'+urlimages2+'/',
+                  width: 320,
+                  height: 232,
+                ),
 
                 new Row(
                   mainAxisSize: MainAxisSize.min,
@@ -145,6 +190,8 @@ class _detailHabitacaoState extends State<detailHabitacao> {
                                   list: widget.list,
                                   email: widget.email,
                                   cidade: widget.cidade,
+                                  img1: urlimages,
+                                  img2: urlimages2,
                                 ),
                               )
                           );
@@ -165,6 +212,6 @@ class _detailHabitacaoState extends State<detailHabitacao> {
           ),
         ),
       ),
-    );
+      ),);
   }
 }

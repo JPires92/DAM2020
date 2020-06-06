@@ -42,7 +42,7 @@ class _myEmpregoState extends State<myEmprego> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: new AppBar(
-          title: new Text('Área Pessoal'),
+          title: new Text('Área Pessoal - Emprego'),
           backgroundColor: Color.fromARGB(255, 173, 216, 230),
           actions: <Widget>[
             IconButton(

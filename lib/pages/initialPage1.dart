@@ -6,6 +6,7 @@ import 'package:damapp/pages/EspLazer/listEspLazer.dart';
 import 'package:damapp/pages/EspLazer/myEspLazer.dart';
 import 'package:damapp/pages/Habitacao/listHabitacao.dart';
 import 'package:damapp/pages/Habitacao/myHabitacao.dart';
+import 'package:damapp/pages/Utilizador/detailUtilizador.dart';
 import 'package:damapp/pages/initialPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -59,6 +60,14 @@ class _InitialP1State extends State<InitialP1> {
           ),
           backgroundColor: Colors.white,
           actions: <Widget>[
+            IconButton(
+                onPressed: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder:(context)=>detailUtilizador(email: _email,cidade: _cidade)));
+                },
+                icon: Icon(
+                  Icons.person_outline,
+                )
+            ),
             IconButton(
                 onPressed: (){
                   Navigator.pushReplacementNamed(context, '/MyHomePage');
