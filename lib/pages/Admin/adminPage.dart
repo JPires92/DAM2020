@@ -2,39 +2,26 @@ import 'dart:convert';
 
 import 'package:damapp/models/concelho.dart';
 import 'package:damapp/models/conexao.dart';
-import 'package:damapp/pages/Utilizador/editUtilizador.dart';
-import 'package:damapp/pages/initialPage1.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:damapp/pages/Admin/Users.dart';
+import 'package:damapp/pages/Admin/adminPage1.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 
- String _cidade,_email="";
+String _cidade="";
 
-class Initial extends StatefulWidget {
-
-  final String cidade;
-  final String email;
-  //Construtor
-  Initial({Key key,@required this.email, @required this.cidade}): super(key: key);
-  //Initial({this.username}); //email user
-
-
+class Admin extends StatefulWidget {
   @override
-  _InitialState createState(){
-    
-    _cidade=this.cidade;
-    _email=this.email;
-    
-    return _InitialState();
-  }
+  _AdminState createState() => _AdminState();
 }
 
-class _InitialState extends State<Initial> {
+class _AdminState extends State<Admin> {
+
   concelho _currentCity;
+
   Future<List<concelho>> _fetchConcelhos() async {
-    conexao cn =new conexao();
-    final String uri= cn.url+"getdataConcelhos.php";
+    conexao cn = new conexao();
+    final String uri = cn.url + "getdataConcelhos.php";
 
     var response = await http.get(uri);
 
@@ -49,7 +36,6 @@ class _InitialState extends State<Initial> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,20 +48,18 @@ class _InitialState extends State<Initial> {
         actions: <Widget>[
           IconButton(
               onPressed: (){
-                Navigator.of(context).push(MaterialPageRoute(builder:(context)=>editUtilizador(email: _email)));
+                Navigator.of(context).push(MaterialPageRoute(builder:(context)=>adminUsers()));
               },
               icon: Icon(
-                Icons.person_outline,
+                Icons.group,
               )
           ),
           IconButton(
-              onPressed: (){
+              onPressed: () {
                 Navigator.pushReplacementNamed(context, '/MyHomePage');
               },
               icon: Icon(
                 Icons.exit_to_app,
-
-
               )
           ),
         ],
@@ -100,7 +84,7 @@ class _InitialState extends State<Initial> {
           ),
         ),
         child: Center(
-          child:Column(
+          child: Column(
             // mainAxisAlignment: MainAxisAlignment.center,
             // mainAxisSize: MainAxisSize.max,
             children: <Widget>[
@@ -112,10 +96,11 @@ class _InitialState extends State<Initial> {
                     if (!snapshot.hasData) return CircularProgressIndicator();
                     return DropdownButton<concelho>(
                       items: snapshot.data
-                          .map((_concelho) => DropdownMenuItem<concelho>(
-                        child: Text(_concelho.label),
-                        value: _concelho,
-                      ))
+                          .map((_concelho) =>
+                          DropdownMenuItem<concelho>(
+                            child: Text(_concelho.label),
+                            value: _concelho,
+                          ))
                           .toList(),
                       onChanged: (concelho value) {
                         setState(() {
@@ -137,15 +122,14 @@ class _InitialState extends State<Initial> {
                 height: 30.0, //Tamanho botão
                 child: RaisedButton(
                   onPressed: () {
-                    if(_currentCity!=null) {
-                      Navigator.of(context).push(
+                    if (_currentCity != null) {
+                        Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) =>
-                              InitialP1(email: _email, cidade: _cidade)));
-                      }
+                            adminPage1(cidade: _currentCity.label,)));
+                    }
                     setState(() {
                       _cidade = _currentCity.label;
                     });
-
                   },
                   child: const Text(
                       'Continuar',
@@ -161,3 +145,4 @@ class _InitialState extends State<Initial> {
     );
   }
 }
+

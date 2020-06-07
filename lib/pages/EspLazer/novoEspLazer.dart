@@ -199,7 +199,6 @@ class _novoEspLazerState extends State<novoEspLazer> {
 
     request.files.add(multipartFile);
     request.fields.addAll({'UPLOADCARE_PUB_KEY': 'demopublickey'}); //CHAVE PUBLICA
-    //request.fields.addAll({'UPLOADCARE_PUB_KEY': 'bb209e6bc36b1b7bb8aa'}); //CHAVE PESSOAL
 
     var response = await request.send();
 

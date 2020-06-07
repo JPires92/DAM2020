@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:damapp/models/utilizador.dart';
+import 'package:damapp/pages/initialPage.dart';
 import 'package:flutter/material.dart';
 import 'package:damapp/pages/initialPage1.dart';
 import 'package:http/http.dart' as http;
@@ -6,12 +8,11 @@ import 'package:damapp/models/conexao.dart';
 
 
 class editUtilizador extends StatefulWidget {
-  final List list;
-  final int index;
-  final String email,cidade;
+
+  final String email;
 
 
-  editUtilizador({this.index,this.list,this.email,this.cidade});
+  editUtilizador({this.email});
 
   @override
   _editUtilizadorState createState() => new _editUtilizadorState();
@@ -19,9 +20,11 @@ class editUtilizador extends StatefulWidget {
 
 class _editUtilizadorState extends State<editUtilizador> {
 
+  String id="";
   TextEditingController controllerNome = new TextEditingController();
   TextEditingController controllerEmail = new TextEditingController();
   TextEditingController controllerPassword = new TextEditingController();
+  TextEditingController controllerRepeatPassword = new TextEditingController();
 
   var _formKey = GlobalKey<FormState>();
 
@@ -30,19 +33,34 @@ class _editUtilizadorState extends State<editUtilizador> {
     conexao cn = new conexao();
     var url = cn.url + "editUtilizador.php";
     http.post(url, body: {
-      "id": widget.list[widget.index]['Id_Utilizador'],
+      "Id": id,
       "Nome": controllerNome.text,
       "Email": controllerEmail.text,
       "Password": controllerPassword.text,
     });
   }
 
+  void getUser() async {
+    conexao cn=new conexao();
+    var url= cn.url+"getUtilizador.php";
+    final response = await http.post(url, body: {
+      "Email": widget.email,
+    });
+
+    var datacategoria = json.decode(response.body);
+    if(datacategoria.length!=0){
+      setState(() {
+        id = (datacategoria[0]['Id_Utilizador']);
+        controllerNome=new TextEditingController(text:datacategoria[0]['Nome']);
+        controllerEmail=new TextEditingController(text:datacategoria[0]['Email']);
+      });
+    }
+  }
+
 
   @override
   void initState() {
-    controllerNome= new TextEditingController(text: widget.list[widget.index]['Nome'] );
-    controllerEmail= new TextEditingController(text: widget.list[widget.index]['Email'] );
-    controllerPassword= new TextEditingController(text: widget.list[widget.index]['Password'] );
+    getUser();
     super.initState();
   }
 
@@ -62,86 +80,94 @@ class _editUtilizadorState extends State<editUtilizador> {
               icon: Icon(Icons.exit_to_app,)
           ),
         ],
-
       ),
-      body:       Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: ListView(
-            children: <Widget>[
-              new Column(
-                children: <Widget>[
-                  Center(
-                    child: Text(
-                      "Editar o meu Perfil",
-                      style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),
+      body: Form(
+      key: _formKey,
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: ListView(
+          children: <Widget>[
+            new Column(
+              children: <Widget>[
+                new ListTile( //Nome
+                  leading: const Icon(Icons.person, color: Colors.black),
+                  title: new TextFormField(
+                    controller: controllerNome,
+                    validator: (value) {
+                      if (value.isEmpty) return "Insira o nome!";
+                    },
+                    decoration: new InputDecoration(
+                      hintText: "nome", labelText: "Nome",
                     ),
                   ),
-                  new ListTile( //Nome
-                    title: new TextFormField(
-                      controller: controllerNome,
-                      validator: (value) {
-                        if (value.isEmpty) return "Insira o nome!";
-                      },
-                      decoration: new InputDecoration(
-                        hintText: "nome ", labelText: "Nome",
-                      ),
+                ),
+                new ListTile(//Email
+                  leading: const Icon(Icons.email, color: Colors.black),
+                  title: new TextFormField(
+                    controller: controllerEmail,
+                    validator: (value) {
+                      if (value.isEmpty) return "Insira o email!";
+                    },
+                    decoration: new InputDecoration(
+                      hintText: "email", labelText: "Email",
                     ),
                   ),
-
-                  new ListTile( //Email de contacto
-                    title: new TextFormField(
-                      controller: controllerEmail,
-                      validator: (value) {
-                        if (value.isEmpty) return "Insira o email!";
-                      },
-                      decoration: new InputDecoration(
-                        hintText: "email", labelText: "Email ",
-                      ),
+                ),
+                new ListTile( //Password
+                  leading: const Icon(Icons.vpn_key, color: Colors.black),
+                  title: new TextFormField(
+                    controller: controllerPassword,
+                    obscureText: true,
+                    validator: (value) {
+                      if (value.isEmpty) return "Insira a password!";
+                    },
+                    decoration: new InputDecoration(
+                      hintText: "password", labelText: "Password",
                     ),
                   ),
-                  new ListTile( //Email de contacto
-                    title: new TextFormField(
-                      controller: controllerPassword,
-                      validator: (value) {
-                        if (value.isEmpty) return "Insira a Password!";
-                      },
-                      decoration: new InputDecoration(
-                        hintText: "password", labelText: "Password",
-                      ),
+                ),
+                new ListTile( //Repeat Password
+                  leading: const Icon(Icons.vpn_key, color: Colors.black),
+                  title: new TextFormField(
+                    controller: controllerRepeatPassword,
+                    obscureText: true,
+                    validator: (value) {
+                      if (controllerPassword.text!=controllerRepeatPassword.text) return "Passwords diferentes!";
+                    },
+                    decoration: new InputDecoration(
+                      hintText: "Confirmação password", labelText: "Confirmação password",
                     ),
                   ),
-
-                  new Padding(
-                    padding: const EdgeInsets.all(30.0),
-                  ),
-                  ButtonTheme( //botão
-                    buttonColor:Color.fromARGB(255, 173, 216, 230),
-                    minWidth: 200.0,
-                    height: 50.0, //Tamanho botão
-                    child: RaisedButton(
-                      onPressed: () {
-                        if (_formKey.currentState.validate()) {
-                          editData();
-                          Navigator.of(context).push(
-                              new MaterialPageRoute(
-                                  builder: (BuildContext context)=>new InitialP1(email: widget.email,cidade: widget.cidade,)
-                              ));
-                        }
-                      },
-                      child: const Text(
-                          'Alterar',
-                          style: TextStyle(fontSize: 20)
-                      ),
+                ),
+                new Padding(
+                  padding: const EdgeInsets.all(30.0),
+                ),
+                ButtonTheme( //botão
+                  buttonColor: Color.fromARGB(255, 173, 216, 230),
+                  minWidth: 200.0,
+                  height: 50.0, //Tamanho botão
+                  child: RaisedButton(
+                    onPressed: () {
+                      if (_formKey.currentState.validate()) {
+                        editData();
+                        Navigator.of(context).push(
+                            new MaterialPageRoute(
+                              builder: (BuildContext context)=> new Initial(email: controllerEmail.text , cidade: ""),
+                            ));
+                      }
+                    },
+                    child: const Text(
+                        'Alterar',
+                        style: TextStyle(fontSize: 20)
                     ),
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
+    ),
     );
   }
 }

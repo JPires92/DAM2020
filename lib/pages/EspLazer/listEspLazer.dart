@@ -37,7 +37,7 @@ class _listEspLazerState extends State<listEspLazer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
-        title: new Text('Espaços de lazer existentes'),
+        title: new Text('Espaços de lazer'),
         backgroundColor: Color.fromARGB(255, 173, 216, 230),
         actions: <Widget>[
           IconButton(

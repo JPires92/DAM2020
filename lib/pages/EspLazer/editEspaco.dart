@@ -46,7 +46,7 @@ class _editEspacoState extends State<editEspaco> {
   //Adicionar proposta de emprego
   void EditEspaco() {
     conexao cn = new conexao();
-    var url = cn.url + "editEspaco.dart.php";
+    var url = cn.url + "editEspaco.php";
     http.post(url, body: {
       "id": widget.list[widget.index]['Id_Espaco'],
       "Designacao": controllerDesignacao.text,
@@ -203,8 +203,7 @@ class _editEspacoState extends State<editEspaco> {
 
     request.files.add(multipartFile);
     request.fields.addAll({'UPLOADCARE_PUB_KEY': 'demopublickey'}); //CHAVE PUBLICA
-    //request.fields.addAll({'UPLOADCARE_PUB_KEY': 'bb209e6bc36b1b7bb8aa'}); //CHAVE PESSOAL
-    // bb209e6bc36b1b7bb8aa
+
     var response = await request.send();
 
     response.stream.transform(utf8.decoder).listen( (value){

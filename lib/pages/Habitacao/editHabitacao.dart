@@ -279,8 +279,7 @@ class _editHabitacaoState extends State<editHabitacao> {
 
     request.files.add(multipartFile);
     request.fields.addAll({'UPLOADCARE_PUB_KEY': 'demopublickey'}); //CHAVE PUBLICA
-    //request.fields.addAll({'UPLOADCARE_PUB_KEY': 'bb209e6bc36b1b7bb8aa'}); //CHAVE PESSOAL
-    // bb209e6bc36b1b7bb8aa
+
     var response = await request.send();
 
     response.stream.transform(utf8.decoder).listen( (value){

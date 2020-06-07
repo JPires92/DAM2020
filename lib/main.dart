@@ -2,8 +2,9 @@ import 'package:damapp/pages/Emprego/listEmprego.dart';
 import 'package:damapp/pages/initialPage.dart';
 import 'package:damapp/pages/initialPage1.dart';
 import 'package:damapp/pages/loginPage.dart';
-import 'package:damapp/pages/adminPage.dart';
-import 'package:damapp/pages/newUserPage.dart';
+import 'file:///C:/Users/jp251/Desktop/Curso/DAM/dam_app/lib/pages/Admin/adminPage.dart';
+import 'file:///C:/Users/jp251/Desktop/Curso/DAM/dam_app/lib/pages/Utilizador/newUserPage.dart';
+import 'file:///C:/Users/jp251/Desktop/Curso/DAM/dam_app/lib/pages/Utilizador/recuperarPass.dart';
 import 'package:flutter/material.dart';
 
 
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         '/initialPage': (BuildContext context)=> new Initial(),
         '/initialPage1': (BuildContext context)=> new InitialP1(),
         '/listEmprego':(BuildContext context) => new listEmprego(),
+        '/recuperarPass':(BuildContext context) => new recuperarPass(),
       },
     );
   }

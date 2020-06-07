@@ -40,7 +40,6 @@ class _novoEmpregoState extends State<novoEmprego> {
   void addEmprego() {
     conexao cn = new conexao();
     var url = cn.url + "addEmprego.php";
-    //var url = "http://192.168.1.2/dam/addUser.php";
     http.post(url, body: {
       "Designacao": controllerDesignacao.text,
       "Descricao": controllerDescricao.text,

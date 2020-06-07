@@ -156,11 +156,17 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.only(
                           top:6, right: 32,
                         ),
-                        child: Text(
-                          'Recuperar password',
-                          style: TextStyle(
-                            color: Colors.grey,
+                        child:InkWell(
+                          child: Text(
+                            'Recuperar password',
+                            style: TextStyle(
+                              fontSize: 16,
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
+                          onTap: (){
+                            Navigator.pushNamed(context,'/recuperarPass');
+                          },
                         ),
                       ),
                     ),

@@ -1,27 +1,84 @@
 import 'dart:convert';
 import 'package:damapp/models/conexao.dart';
+import 'package:damapp/models/email.dart';
+import 'package:damapp/pages/Admin/adminPage1.dart';
+import 'package:damapp/pages/initialPage1.dart';
 import 'package:flutter/material.dart';
+import 'package:damapp/pages/Habitacao/editHabitacao.dart';
 import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 
-
-String categoria="";
-class detailAllHabitacao extends StatefulWidget {
+String categoria, estado, emailUser,msg="";
+class dtlHabitacao extends StatefulWidget {
   List list;
   int index;
   String email;
   String cidade;
 
-  detailAllHabitacao({this.index,this.list,this.email,this.cidade});
-
+  dtlHabitacao({this.index,this.list,this.cidade});
   @override
-  _detailAllHabitacaoState createState() => _detailAllHabitacaoState();
+  _dtlHabitacaoState createState(){
+    estado = list[index]['Estado'];
+    return _dtlHabitacaoState();
+  }
 }
 
-class _detailAllHabitacaoState extends State<detailAllHabitacao> {
+class _dtlHabitacaoState extends State<dtlHabitacao> {
+
+  @override
+  void initState() {
+    getCategoria();
+    getImagens();
+    getUser();
+    super.initState();
+  }
+
+  //alterar estado
+  void updateData() {
+    (estado == '1') ? estado='0' : estado='1';
+    conexao cn = new conexao();
+    var url = cn.url + "editHabitacaoAdmin.php";
+    http.post(url, body: {
+      "Id": widget.list[widget.index]['Id_Habitacao'],
+      "Estado":estado,
+    });
+    _sendEmail();
+  }
+
+  //Notificar user
+  var email = Email('fixatedam2020@gmail.com', '-dam2020');
+
+  void getUser() async {
+    conexao cn=new conexao();
+    var url= cn.url+"getUser.php";
+    final response = await http.post(url, body: {
+      "Id": widget.list[widget.index]['Id_Utilizador'].toString(),
+    });
+    var dataUser = json.decode(response.body);
+    if(dataUser.length==1){
+      setState(() {
+        emailUser= dataUser[0]['Email'].toString();
+      });
+    }
+  }
+
+  void _sendEmail() async {
+    String verificaEstado ="";
+    (estado == '1') ? verificaEstado='ativo' : verificaEstado='suspenso';
+    String texto= 'O seu anúncio de habitação "'+ widget.list[widget.index]['Designacao']+
+        '" foi ' + verificaEstado +', para mais informações contacte o administrador através deste email.';
+    bool result = await email.sendMessage(
+        texto, emailUser, 'Anúncio Suspenso/Ativo');
+
+    setState(() {
+      msg = result ? 'Email enviado.' : 'Email não enviado.';
+      print (msg);
+    });
+  }
 
   String urlimages="SemImagem";
   String urlimages2="SemImagem";
+
 
   void getImagens() async {
     conexao cn=new conexao();
@@ -29,7 +86,6 @@ class _detailAllHabitacaoState extends State<detailAllHabitacao> {
     final response = await http.post(url, body: {
       "Id": widget.list[widget.index]['Id_Habitacao'].toString(),
     });
-
     var data = json.decode(response.body);
     if(data.length!=0){
       setState(() {
@@ -58,20 +114,12 @@ class _detailAllHabitacaoState extends State<detailAllHabitacao> {
     }
   }
 
-  @override
-  void initState() {
-    getCategoria();
-    getImagens();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
-    //getCategoria();
     return new Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar:  new AppBar(
-        title: new Text('Habitações existentes'),
+        title: new Text('Detalhes anúncio'),
         backgroundColor: Color.fromARGB(255, 173, 216, 230),
         actions: <Widget>[
           IconButton(
@@ -83,8 +131,9 @@ class _detailAllHabitacaoState extends State<detailAllHabitacao> {
         ],
 
       ),
+      resizeToAvoidBottomInset: false,
       body:
-          SingleChildScrollView(child:
+      SingleChildScrollView(child:
       new Container(
         //height: 300.0,
         // padding: const EdgeInsets.all(20.0),
@@ -104,38 +153,58 @@ class _detailAllHabitacaoState extends State<detailAllHabitacao> {
                 new Text("Preço", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
                 new Text("${widget.list[widget.index]['Preco']}", style: new TextStyle(fontSize: 16.0),textAlign: TextAlign.center),
                 Divider(),
-                //Categoria
+                //Oferta
                 new Text("Oferta", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
                 new Text(categoria, style: new TextStyle(fontSize: 16.0),),
                 Divider(),
                 //Email pra contacto
                 new Text("Email Contacto", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
                 new Text("${widget.list[widget.index]['EmailContato']}", style: new TextStyle(fontSize: 16.0),),
-               Divider(),
-               Text("Imagens", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
-               urlimages=="SemImagem"?
-               Text(" "):
+                Divider(),
+                Text("Imagens", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
+                urlimages=="SemImagem"?
+                Text(" "):
                 CachedNetworkImage(
-                 placeholder: (context, url) => CircularProgressIndicator(),
+                  placeholder: (context, url) => CircularProgressIndicator(),
                   imageUrl: 'https://ucarecdn.com/'+urlimages+'/',
-                 width: 320,
+                  width: 320,
                   height: 232,
-               ),
-               Divider(),
+                ),
+                Divider(),
                 urlimages2=="SemImagem"?
                 Text(" "):
-               CachedNetworkImage(
+                CachedNetworkImage(
                   placeholder: (context, url) => CircularProgressIndicator(),
                   imageUrl: 'https://ucarecdn.com/'+urlimages2+'/',
-                 width: 320,
-                 height: 232,
+                  width: 320,
+                  height: 232,
                 ),
 
+                new Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    new RaisedButton(
+                      child: new Text(
+                        (estado == '1') ? 'SUSPENDER' : 'ATIVAR',
+                      ),
+                      color:  (estado == '1') ? Colors.redAccent : Colors.green,
+                      shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(30.0)),
+                      onPressed: (){
+                        updateData();
+                        Navigator.of(context).push(
+                            new MaterialPageRoute(
+                                builder: (BuildContext context)=>new adminPage1(cidade: widget.cidade,)
+                            ));
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
         ),
       ),
-          ), );
+      ),);
   }
 }

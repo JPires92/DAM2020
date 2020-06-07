@@ -52,7 +52,6 @@ class _novoHabitacaoState extends State<novoHabitacao> {
   void addHabitacao() {
     conexao cn = new conexao();
     var url = cn.url + "addHabitacao.php";
-    //var url = "http://192.168.1.2/dam/addUser.php";
     http.post(url, body: {
       "Designacao": controllerDesignacao.text,
       "Descricao": controllerDescricao.text,
@@ -280,7 +279,7 @@ class _novoHabitacaoState extends State<novoHabitacao> {
 
     request.files.add(multipartFile);
     request.fields.addAll({'UPLOADCARE_PUB_KEY': 'demopublickey'}); //CHAVE PUBLICA
-    //request.fields.addAll({'UPLOADCARE_PUB_KEY': 'bb209e6bc36b1b7bb8aa'}); //CHAVE PESSOAL
+
 
     var response = await request.send();
 

@@ -17,7 +17,8 @@ dependencies:
   cupertino_icons: ^0.1.2
   http: any
   image_picker: any #ter acesso a galeria de imagens
-  cached_network_image: any #guarda imagens em cache
+  cached_network_image: any
+  mailer: ^3.0.4 #email
 
 dev_dependencies:
   flutter_test:

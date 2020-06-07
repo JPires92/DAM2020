@@ -1,34 +1,36 @@
 import 'dart:convert';
 import 'package:damapp/models/conexao.dart';
-import 'package:damapp/pages/EspLazer/detailEspaco.dart';
-import 'package:damapp/pages/EspLazer/novoEspLazer.dart';
+import 'package:damapp/pages/Admin/dtlEspacos.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-String _email,_cidade="";
-class myEspLazer extends StatefulWidget {
+String _tipoEspaco,_cidade=""; //1-Espaços verdes, 2-Espaços lazer
+class adminEspacos extends StatefulWidget {
 
-  final String email,cidade;
+  final String espaco,cidade;
 
-  myEspLazer({@required this.email,@required this.cidade});
+  adminEspacos({@required this.espaco,@required this.cidade});
+
 
   @override
-  _myEspLazerState createState(){
-    _email=this.email;
+  _adminEspacos createState(){
+    _tipoEspaco=this.espaco;
     _cidade=this.cidade;
-    return _myEspLazerState();
+    return _adminEspacos();
   }
 }
 
-class _myEspLazerState extends State<myEspLazer> {
-  //Carregar anuncios de espaços verdes pessoais
+class _adminEspacos extends State<adminEspacos> {
+
+
+  //Carregar todos anuncios de espaços verdes ou lazer
   Future<List> _fetchEspacos() async {
     conexao cn =new conexao();
-    final String url= cn.url+"getMyEspLazer.php";
+    final String url= cn.url+"getEspacos.php";
 
     final response = await http.post(url, body: {
-      "Email": _email,
       "Cidade": _cidade,
+      "Espaco":_tipoEspaco,
     });
 
     return json.decode(response.body);
@@ -37,24 +39,20 @@ class _myEspLazerState extends State<myEspLazer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
-        title: new Text('Espaços Lazer',),
+        title: new Text(
+         _tipoEspaco == '1' ?  'Espaços verdes' : 'Espaços de lazer',
+        ),
         backgroundColor: Color.fromARGB(255, 173, 216, 230),
         actions: <Widget>[
           IconButton(
               onPressed: (){
                 Navigator.pushReplacementNamed(context, '/MyHomePage');
               },
-              icon: Icon(Icons.exit_to_app)
+              icon: Icon(Icons.exit_to_app,)
           ),
         ],
 
       ),
-      floatingActionButton: FloatingActionButton(child: Icon(Icons.add),
-          backgroundColor: Color.fromARGB(255, 173, 216, 230),
-          foregroundColor: Colors.white,
-          onPressed: (){
-            Navigator.of(context).push(MaterialPageRoute(builder:(context)=>novoEspLazer(email: _email,cidade: _cidade)));
-          }),
       body:new FutureBuilder<List>(
         future: _fetchEspacos(),
         builder: (context, snapshot) {
@@ -85,10 +83,9 @@ class ItemList extends StatelessWidget {
           child: new GestureDetector(
             onTap: () => Navigator.of(context).push(
               new MaterialPageRoute(
-                  builder: (BuildContext context) => new detailEspaco(
+                  builder: (BuildContext context) => new dtlEspacos(
                     index: i,
                     list: list,
-                    email: _email,
                     cidade: _cidade,
                   )),
             ),
@@ -99,9 +96,13 @@ class ItemList extends StatelessWidget {
                   style: TextStyle(fontSize: 25.0, color: Colors.black),
                 ),
                 leading: new Icon(
-                  Icons.local_activity,
+                  _tipoEspaco == '1' ?  Icons.landscape : Icons.local_activity,
                   size: 44.0,
                   color: Color.fromARGB(255, 173, 216, 230),
+                ),
+                subtitle: new Text(
+                  ((list[i]['Estado'])=='1') ? 'Ativo' : 'Suspenso',
+                  style: TextStyle(fontSize: 20.0, color: Colors.black),
                 ),
               ),
             ),

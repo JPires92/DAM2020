@@ -2,6 +2,6 @@ class conexao{
   String url;
 
   conexao({
-    this.url="http://192.168.1.82/dam/"
+    this.url="http://10.22.221.127/dam/"
   });
 }

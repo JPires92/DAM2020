@@ -1,37 +1,74 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:damapp/models/conexao.dart';
-import 'package:damapp/pages/EspLazer/editEspaco.dart';
-import 'package:damapp/pages/initialPage1.dart';
+import 'package:damapp/models/email.dart';
+import 'package:damapp/pages/Admin/adminPage1.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class detailEspaco extends StatefulWidget {
+String estado, emailUser, msg="";
+class dtlEspacos extends StatefulWidget {
   List list;
   int index;
-  String email;
   String cidade;
 
-  detailEspaco({this.index,this.list,this.email,this.cidade});
+  dtlEspacos({this.index,this.list,this.cidade});
 
   @override
-  _detailEspacoState createState() => _detailEspacoState();
+  _dtlEspacosState createState(){
+    estado = list[index]['Estado'];
+    return _dtlEspacosState();
+  }
 }
 
-class _detailEspacoState extends State<detailEspaco> {
+class _dtlEspacosState extends State<dtlEspacos> {
+ //Alterar estado
+  void updateData() {
+    (estado == '1') ? estado='0' : estado='1';
+    conexao cn = new conexao();
+    var url = cn.url + "editEspacoAdmin.php";
+    http.post(url, body: {
+      "Id": widget.list[widget.index]['Id_Espaco'],
+      "Estado": estado,
+    });
+    _sendEmail();
+  }
+
+
+  //Notificar user
+  var email = Email('fixatedam2020@gmail.com', '-dam2020');
+
+  void getUser() async {
+    conexao cn=new conexao();
+    var url= cn.url+"getUser.php";
+    final response = await http.post(url, body: {
+      "Id": widget.list[widget.index]['Id_Utilizador'].toString(),
+    });
+    var dataUser = json.decode(response.body);
+    if(dataUser.length==1){
+      setState(() {
+        emailUser= dataUser[0]['Email'].toString();
+      });
+    }
+  }
+
+  void _sendEmail() async {
+    String verificaEstado ="";
+    (estado == '1') ? verificaEstado='ativo' : verificaEstado='suspenso';
+    String texto= 'O seu anúncio de Espaço de Lazer/Verde "'+ widget.list[widget.index]['Designacao']+
+        '" foi ' + verificaEstado +', para mais informações contacte o administrador através deste email.';
+    bool result = await email.sendMessage(
+        texto, emailUser, 'Anúncio Suspenso/Ativo');
+
+    setState(() {
+      msg = result ? 'Email enviado.' : 'Email não enviado.';
+      print (msg);
+    });
+  }
+
   String urlimages="SemImagem";
   String urlimages2="SemImagem";
 
-  //Apagar registo
-  void deleteData(){
-    conexao cn=new conexao();
-    var url= cn.url+"deleteEspLazer.php";
-    http.post(url, body: {
-      'id': widget.list[widget.index]['Id_Espaco'],
-      'Img1': urlimages,
-      'Img2': urlimages2,
-    });
-  }
 
   void getImagens() async {
     conexao cn=new conexao();
@@ -52,40 +89,15 @@ class _detailEspacoState extends State<detailEspaco> {
   @override
   void initState() {
     getImagens();
+    getUser();
     super.initState();
   }
 
-  void confirm (){
-    AlertDialog alertDialog = new AlertDialog(
-      content: new Text("Desja eliminar espaço: '${widget.list[widget.index]['Designacao']}'"),
-      actions: <Widget>[
-        new RaisedButton(
-          child: new Text("ELIMINAR",style: new TextStyle(color: Colors.black),),
-          color: Colors.red,
-          onPressed: (){
-            deleteData();
-            Navigator.of(context).push(
-                new MaterialPageRoute(
-                  builder: (BuildContext context)=> new InitialP1(email: widget.email , cidade: widget.cidade),
-                )
-            );
-          },
-        ),
-        new RaisedButton(
-          child: new Text("CANCELAR",style: new TextStyle(color: Colors.black)),
-          color: Colors.green,
-          onPressed: ()=> Navigator.pop(context),
-        ),
-      ],
-    );
-
-    showDialog(context: context, child: alertDialog);
-  }
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar:  new AppBar(
-        title: new Text('Espaços Lazer'),
+        title: new Text('Detalhes anúncio'),
         backgroundColor: Color.fromARGB(255, 173, 216, 230),
         actions: <Widget>[
           IconButton(
@@ -140,33 +152,19 @@ class _detailEspacoState extends State<detailEspaco> {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         new RaisedButton(
-                            child: new Text("EDITAR"),
-                            color: Color.fromARGB(255, 173, 216, 230),
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(30.0)),
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                  new MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                    new editEspaco(
-                                      index: widget.index,
-                                      list: widget.list,
-                                      email: widget.email,
-                                      cidade: widget.cidade,
-                                      img1: urlimages,
-                                      img2: urlimages2,
-                                    ),
-                                  )
-                              );
-                            }
-                        ),
-                        VerticalDivider(),
-                        new RaisedButton(
-                          child: new Text("ELIMINAR"),
-                          color: Colors.redAccent,
+                          child: new Text(
+                            (estado == '1') ? 'SUSPENDER' : 'ATIVAR',
+                          ),
+                          color:  (estado == '1') ? Colors.redAccent : Colors.green,
                           shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(30.0)),
-                          onPressed: ()=>confirm(),
+                          onPressed: (){
+                            updateData();
+                            Navigator.of(context).push(
+                                new MaterialPageRoute(
+                                    builder: (BuildContext context)=>new adminPage1(cidade: widget.cidade,)
+                                ));
+                          },
                         ),
                       ],
                     ),

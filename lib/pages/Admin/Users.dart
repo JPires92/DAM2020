@@ -1,34 +1,23 @@
 import 'dart:convert';
-import 'package:damapp/models/conexao.dart';
-import 'package:damapp/pages/EspLazer/detailEspaco.dart';
-import 'package:damapp/pages/EspLazer/novoEspLazer.dart';
-import 'package:flutter/material.dart';
+import 'package:damapp/pages/Admin/dtlEmpregos.dart';
+import 'package:damapp/pages/Admin/dtlUsers.dart';
 import 'package:http/http.dart' as http;
+import 'package:damapp/models/conexao.dart';
+import 'package:flutter/material.dart';
 
-String _email,_cidade="";
-class myEspLazer extends StatefulWidget {
-
-  final String email,cidade;
-
-  myEspLazer({@required this.email,@required this.cidade});
-
+class adminUsers extends StatefulWidget {
   @override
-  _myEspLazerState createState(){
-    _email=this.email;
-    _cidade=this.cidade;
-    return _myEspLazerState();
-  }
+  _adminUsersState createState() => _adminUsersState();
 }
 
-class _myEspLazerState extends State<myEspLazer> {
-  //Carregar anuncios de espaços verdes pessoais
-  Future<List> _fetchEspacos() async {
+class _adminUsersState extends State<adminUsers> {
+//Carregar anuncios de emprego pessoais
+  Future<List> _fetchUsers() async {
     conexao cn =new conexao();
-    final String url= cn.url+"getMyEspLazer.php";
+    final String url= cn.url+"getUsersAdmin.php";
 
     final response = await http.post(url, body: {
-      "Email": _email,
-      "Cidade": _cidade,
+      "tipoUser": '2',
     });
 
     return json.decode(response.body);
@@ -37,26 +26,20 @@ class _myEspLazerState extends State<myEspLazer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
-        title: new Text('Espaços Lazer',),
+        title: new Text('Utilizadores'),
         backgroundColor: Color.fromARGB(255, 173, 216, 230),
         actions: <Widget>[
           IconButton(
               onPressed: (){
                 Navigator.pushReplacementNamed(context, '/MyHomePage');
               },
-              icon: Icon(Icons.exit_to_app)
+              icon: Icon(Icons.exit_to_app,)
           ),
         ],
 
       ),
-      floatingActionButton: FloatingActionButton(child: Icon(Icons.add),
-          backgroundColor: Color.fromARGB(255, 173, 216, 230),
-          foregroundColor: Colors.white,
-          onPressed: (){
-            Navigator.of(context).push(MaterialPageRoute(builder:(context)=>novoEspLazer(email: _email,cidade: _cidade)));
-          }),
       body:new FutureBuilder<List>(
-        future: _fetchEspacos(),
+        future: _fetchUsers(),
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
           return snapshot.hasData
@@ -85,23 +68,25 @@ class ItemList extends StatelessWidget {
           child: new GestureDetector(
             onTap: () => Navigator.of(context).push(
               new MaterialPageRoute(
-                  builder: (BuildContext context) => new detailEspaco(
-                    index: i,
+                  builder: (BuildContext context) => new dtlUsers(
                     list: list,
-                    email: _email,
-                    cidade: _cidade,
+                    index: i,
                   )),
             ),
             child: new Card(
               child: new ListTile(
                 title: new Text(
-                  list[i]['Designacao'],
+                  list[i]['Nome'],
                   style: TextStyle(fontSize: 25.0, color: Colors.black),
                 ),
                 leading: new Icon(
-                  Icons.local_activity,
+                  Icons.person_outline,
                   size: 44.0,
                   color: Color.fromARGB(255, 173, 216, 230),
+                ),
+                subtitle: new Text(
+                  ((list[i]['Estado'])=='1') ? 'Ativo' : 'Suspenso',
+                  style: TextStyle(fontSize: 20.0, color: Colors.black),
                 ),
               ),
             ),
@@ -111,3 +96,4 @@ class ItemList extends StatelessWidget {
     );
   }
 }
+
