@@ -21,7 +21,7 @@ class _recuperarPassState extends State<recuperarPass> {
   var email = Email('fixatedam2020@gmail.com', '-dam2020');
   void criaPassRandom(){
     var _random = Random.secure();
-    var random = List<int>.generate(10, (i) => _random.nextInt(256));
+    var random = List<int>.generate(6, (i) => _random.nextInt(256));
     var verificador = base64Url.encode(random);
     setState(() {
       pass=verificador;
@@ -55,6 +55,11 @@ class _recuperarPassState extends State<recuperarPass> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: new AppBar(
+
+        title: new Text("Recuperar password"),
+        backgroundColor: Color.fromARGB(255, 173, 216, 230),
+      ),
       body: Form(
         key: _formKey,
         child: Padding(padding: const EdgeInsets.all(10.0),
@@ -62,6 +67,7 @@ class _recuperarPassState extends State<recuperarPass> {
             children: <Widget>[
               new Column(
                 children: <Widget>[
+                  Text("",style: TextStyle(fontSize: 20),),
                   new ListTile( //Email
                     leading: const Icon(Icons.email, color: Colors.black),
                     title: new TextFormField(

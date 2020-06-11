@@ -38,7 +38,7 @@ class _listEspVerdesState extends State<listEspVerdes> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
-        title: new Text('Espaços verdes existentes'),
+        title: new Text('Espaços verdes'),
         backgroundColor: Color.fromARGB(255, 173, 216, 230),
         actions: <Widget>[
           IconButton(

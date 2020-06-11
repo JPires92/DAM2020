@@ -36,7 +36,7 @@ class _listHabitacaoState extends State<listHabitacao> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
-        title: new Text('Habitações existentes'),
+        title: new Text('Habitação'),
         backgroundColor: Color.fromARGB(255, 173, 216, 230),
         actions: <Widget>[
           IconButton(

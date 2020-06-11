@@ -46,7 +46,7 @@ class _editEspacoState extends State<editEspaco> {
   //Adicionar proposta de emprego
   void EditEspaco() {
     conexao cn = new conexao();
-    var url = cn.url + "editEspaco.dart.php";
+    var url = cn.url + "editEspaco.php";
     http.post(url, body: {
       "id": widget.list[widget.index]['Id_Espaco'],
       "Designacao": controllerDesignacao.text,

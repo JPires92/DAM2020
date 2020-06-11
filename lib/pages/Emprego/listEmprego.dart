@@ -36,7 +36,7 @@ class _listEmpregoState extends State<listEmprego> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
-        title: new Text('Empregos existentes'),
+        title: new Text('Empregos'),
         backgroundColor: Color.fromARGB(255, 173, 216, 230),
         actions: <Widget>[
           IconButton(

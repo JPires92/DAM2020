@@ -83,9 +83,7 @@ class _InitialP1State extends State<InitialP1> {
         body:
         Container(
           //MENU SUPERIOR
-
-          child:
-          Row(
+          child:Row(
             mainAxisAlignment: MainAxisAlignment.center ,
             //crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
@@ -155,8 +153,6 @@ class _InitialP1State extends State<InitialP1> {
                 ),
             ],
           ),
-
-
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage("assets/images/mapa04.png"),
